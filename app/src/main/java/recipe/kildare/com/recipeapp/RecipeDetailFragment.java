@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import recipe.kildare.com.recipeapp.dummy.DummyContent;
-
 /**
  * A fragment representing a single Recipe detail screen.
  * This fragment is either contained in a {@link RecipeListActivity}

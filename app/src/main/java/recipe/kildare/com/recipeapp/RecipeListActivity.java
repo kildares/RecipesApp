@@ -15,9 +15,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import recipe.kildare.com.recipeapp.dummy.DummyContent;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import recipe.kildare.com.recipeapp.Network.JSONUtils;
+import recipe.kildare.com.recipeapp.Network.NetworkUtils;
 
 /**
  * An activity representing a list of Recipes. This activity
@@ -27,24 +34,32 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class RecipeListActivity extends AppCompatActivity {
+public class RecipeListActivity extends AppCompatActivity implements Response.ErrorListener, Response.Listener<String> {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
+
+    private static final String VOLLEY_TAG = "RECIPE_LIST_TAG";
+
+    private RequestQueue mQueue;
+
     private boolean mTwoPane;
+
+    @BindView(R2.id.toolbar) Toolbar toolbar;
+    @BindView(R2.id.fab) FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,14 +76,21 @@ public class RecipeListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        View recyclerView = findViewById(R.id.recipe_list);
+            View recyclerView = findViewById(R.id.recipe_list);
         assert recyclerView != null;
+
         setupRecyclerView((RecyclerView) recyclerView);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
+
+        if(recyclerView.getAdapter() == null){
+            mQueue = NetworkUtils.getRecipeListFromServer(this, this, this);
+        }
+
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
     }
+
 
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
@@ -137,5 +159,30 @@ public class RecipeListActivity extends AppCompatActivity {
                 mContentView = (TextView) view.findViewById(R.id.content);
             }
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if(mQueue != null){
+            mQueue.cancelAll(VOLLEY_TAG);
+        }
+
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+
+        showErrorMessage();
+        mQueue.cancelAll(VOLLEY_TAG);
+        mQueue = null;
+    }
+
+    @Override
+    public void onResponse(String response) {
+        JSONUtils.parseRecipeList(response);
+        mQueue.cancelAll(VOLLEY_TAG);
+        mQueue = null;
     }
 }
