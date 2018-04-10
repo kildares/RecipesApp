@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 /**
  * Created by kilda on 4/9/2018.
@@ -51,7 +52,7 @@ public class RecipeProvider extends ContentProvider{
             case CODE_RECIPE:{
                 SQLiteDatabase sqLiteDatabase = mOpenHelper.getReadableDatabase();
 
-                cursor = sqLiteDatabase.query(RecipeDbContract.RecipeEntry.TABLE_NAME,
+                cursor = sqLiteDatabase.query(RecipeDB.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -64,9 +65,9 @@ public class RecipeProvider extends ContentProvider{
             case CODE_RECIPE_ID:{
                 SQLiteDatabase sqLiteDatabase = mOpenHelper.getWritableDatabase();
 
-                cursor = sqLiteDatabase.query(RecipeDbContract.RecipeEntry.TABLE_NAME,
+                cursor = sqLiteDatabase.query(RecipeDB.TABLE_NAME,
                         projection,
-                        RecipeDbContract.RecipeEntry.COLUMN_ID + " = ?",
+                        RecipeDB.COLUMN_ID + " = ?",
                         selectionArgs,
                         null,
                         null,
@@ -110,22 +111,28 @@ public class RecipeProvider extends ContentProvider{
             case CODE_RECIPE:{
 
                 totalDeleted = mOpenHelper.getWritableDatabase().delete(
-                        RecipeDbContract.RecipeEntry.TABLE_NAME,
+                        RecipeDB.TABLE_NAME,
                         selection,
                         null
                 );
 
+                //Will remove all registers from ingredients table since all registers from recipe registers have been removed
+                if(totalDeleted > 0)
+                    mOpenHelper.getWritableDatabase().delete(IngredientDB.TABLE_NAME,selection,null);
                 break;
             }
             case CODE_RECIPE_ID:{
 
+                int ingredientsDeleted =  mOpenHelper.getWritableDatabase().delete(IngredientDB.TABLE_NAME, RecipeDB.COLUMN_ID + " = ?", selectionArgs);
+
+                Log.d("INGREDIENTS", "TOTAL DELETED = " + Integer.toString(ingredientsDeleted ));
+
                 totalDeleted = mOpenHelper.getWritableDatabase().delete(
-                        RecipeDbContract.RecipeEntry.TABLE_NAME,
+                        RecipeDB.TABLE_NAME,
                         selection,
                         null
                 );
                 break;
-
             }
 
             default:{
@@ -156,7 +163,7 @@ public class RecipeProvider extends ContentProvider{
                 try{
                     for(ContentValues contentValue : values){
                         long result = db.insert(
-                                RecipeDbContract.RecipeEntry.TABLE_NAME,
+                                RecipeDB.TABLE_NAME,
                                 null,
                                 contentValue
                                 );

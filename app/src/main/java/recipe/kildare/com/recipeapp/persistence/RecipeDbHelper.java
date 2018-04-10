@@ -21,12 +21,14 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
-        //TODO criar DB
-        //sqLiteDatabase.exe
+        sqLiteDatabase.execSQL(RecipeDB.createDbSQL());
+        sqLiteDatabase.execSQL(IngredientDB.createDbSQL());
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + RecipeDbContract.RecipeEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + IngredientDB.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + RecipeDB.TABLE_NAME);
     }
 }
