@@ -1,17 +1,15 @@
 package recipe.kildare.com.recipeapp.Network;
 
-import android.content.ContentValues;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import recipe.kildare.com.recipeapp.persistence.RecipeDB;
-import recipe.kildare.com.recipeapp.persistence.RecipeDbContract;
+import java.util.ArrayList;
+import java.util.List;
+
+import recipe.kildare.com.recipeapp.Entities.Ingredient;
+import recipe.kildare.com.recipeapp.Entities.Recipe;
+import recipe.kildare.com.recipeapp.Entities.Step;
 
 /**
  * Created by kilda on 4/9/2018.
@@ -19,40 +17,45 @@ import recipe.kildare.com.recipeapp.persistence.RecipeDbContract;
 
 public class RecipeJSONUtils {
 
-    public static final String RECIPES = "recipes";
-    public static final String RECIPE = "recipe";
-    public static final String PUBLISHER = "publisher";
-    public static final String F2F_URL = "f2f_url";
-    public static final String TITLE = "title";
-    public static final String SOURCE_URL = "source_url";
-    public static final String RECIPE_ID = "recipe_id";
-    public static final String IMAGE_URL = "image_url";
-    public static final String SOCIAL_RANK = "social_rank";
-    public static final String PUBLISHER_URL = "publisher_url";
-    public static final String INGREDIENTS = "ingredients";
+    public static final String RECIPE_ID = "id";
+    public static final String RECIPE_NAME = "name";
+    public static final String RECIPE_INGREDIENTS = "ingredients";
+    public static final String RECIPE_STEPS = "steps";
+    public static final String RECIPE_SERVINGS = "serving";
+    public static final String RECIPE_IMAGE = "image";
+    public static final String INGREDIENT_QUANTITY = "quantity";
+    public static final String INGREDIENT_MEASURE = "measure";
+    public static final String INGREDIENT_NAME = "ingredient";
+    public static final String STEP_id = "id";
+    public static final String STEP_SHORT_DESCRIPTION = "shortDescription";
+    public static final String STEP_DESCRIPTION = "description";
+    public static final String STEP_VIDEO_URL = "videoURL";
+    public static final String STEP_THUMBNAIL = "thumbnailURL";
 
-    public static ContentValues[] parseRecipeList(String response) {
+    public static List<Recipe> parseRecipeList(String response) {
 
         try {
+
             JSONObject json = new JSONObject(response);
+            List<Recipe> recipes = new ArrayList<>();
 
-            JSONArray jsonArray = json.getJSONArray(RecipeJSONUtils.RECIPES);
+            for(int i=0; i < json.length() ; i++){
 
-            ContentValues[] contentValues = new ContentValues[jsonArray.length()];
+                JSONObject jsonObject = json.getJSONObject(i);
 
-            for(int i=0; i < jsonArray.length() ; i++){
+                String id = jsonObject.getString(RECIPE_ID);
+                String name = jsonObject.getString(RECIPE_NAME);
+                List<Ingredient> ingredients = RecipeJSONUtils.parseRecipeIngredient(jsonObject.getJSONArray(RECIPE_INGREDIENTS));
+                List<Step> steps = RecipeJSONUtils.parseRecipeSteps(jsonObject.getJSONArray(RECIPE_STEPS));
+                String servings = jsonObject.getString(RECIPE_SERVINGS);
+                String image = jsonObject.getString(RECIPE_IMAGE);
 
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                Recipe recipe = new Recipe(id, name, ingredients, steps, servings, image);
 
-                ContentValues contentValue = new ContentValues();
-                contentValue.put(RecipeDB.COLUMN_ID, jsonObject.getString(RECIPE_ID));
-                contentValue.put(RecipeDB.COLUMN_IMAGE, jsonObject.getString(IMAGE_URL));
-                contentValue.put(RecipeDB.COLUMN_TITLE, jsonObject.getString(TITLE));
-
-                contentValues[i] = contentValue;
+                recipes.add(recipe);
             }
 
-            return contentValues;
+            return recipes;
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -61,27 +64,52 @@ public class RecipeJSONUtils {
     }
 
 
-    public static ContentValues[] parseRecipeIngredient(String response) {
+
+    public static List<Ingredient> parseRecipeIngredient(JSONArray ingredients) {
 
         try {
-            JSONObject json = new JSONObject(response);
 
-            JSONObject jsonObject = json.getJSONObject(RecipeJSONUtils.RECIPE);
-            JSONArray jsonArray = jsonObject.getJSONArray(RecipeJSONUtils.INGREDIENTS);
-            ContentValues[] contentValues = new ContentValues[jsonArray.length()];
+            List<Ingredient> list = new ArrayList<Ingredient>();
+            for(int i=0; i < list.size() ; i++){
 
-            for(int i=0; i < jsonArray.length() ; i++){
+                JSONObject jsonObject = (JSONObject) ingredients.get(i);
+                String quantity = jsonObject.getString(INGREDIENT_QUANTITY);
+                String measure = jsonObject.getString(INGREDIENT_MEASURE);
+                String name = jsonObject.getString(INGREDIENT_NAME);
 
-                String ingredient = (String) jsonArray.get(i);
 
-                ContentValues contentValue = new ContentValues();
-
-                contentValue.put(Integer.toString(i), ingredient);
-
-                contentValues[i] = contentValue;
+                Ingredient ingredient = new Ingredient(name, quantity, measure);
+                list.add(ingredient);
             }
 
-            return contentValues;
+            return list;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static List<Step> parseRecipeSteps(JSONArray steps)
+    {
+
+        try {
+
+            List<Step> list = new ArrayList<Step>();
+            for(int i=0; i < list.size() ; i++){
+
+                JSONObject jsonObject = (JSONObject) steps.get(i);
+                String id = jsonObject.getString(STEP_id);
+                String shortDescription = jsonObject.getString(STEP_SHORT_DESCRIPTION);
+                String description = jsonObject.getString(STEP_DESCRIPTION);
+                String videoURL = jsonObject.getString(STEP_VIDEO_URL);
+                String thumbnailURL = jsonObject.getString(STEP_THUMBNAIL);
+
+                Step step = new Step(id, shortDescription, description, videoURL, thumbnailURL);
+                list.add(step);
+            }
+
+            return list;
 
         } catch (JSONException e) {
             e.printStackTrace();

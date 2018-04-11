@@ -1,11 +1,6 @@
 package recipe.kildare.com.recipeapp;
 
-import android.content.ContentValues;
-import android.content.Loader;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,12 +13,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import recipe.kildare.com.recipeapp.Network.RecipeJSONUtils;
+import recipe.kildare.com.recipeapp.Entities.Recipe;
+import recipe.kildare.com.recipeapp.RecyclerView.ParseRecipeData;
+import recipe.kildare.com.recipeapp.RecyclerView.RecipeAsyncTask;
 import recipe.kildare.com.recipeapp.RecyclerView.RecipeListRecyclerViewAdapter;
-import recipe.kildare.com.recipeapp.persistence.RecipeDB;
-import recipe.kildare.com.recipeapp.persistence.RecipeDataLoad;
 
 /**
  * An activity representing a list of Recipes. This activity
@@ -35,7 +32,10 @@ import recipe.kildare.com.recipeapp.persistence.RecipeDataLoad;
  */
 public class RecipeListActivity extends AppCompatActivity implements    Response.ErrorListener,
                                                                         Response.Listener<String>,
-        LoaderManager.LoaderCallbacks<Cursor>,RecipeDataLoad {
+                                                                        ParseRecipeData
+
+
+{
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -90,7 +90,7 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
     /**
      * Configures the recyclerView with data from the adapter. If none exists, will fetch the data online
      */
-    private void setupRecyclerView(Cursor data) {
+    private void setupRecyclerView(List<Recipe> data) {
 
         if(mAdapter == null)
             mAdapter.setRecipeData(data);
@@ -123,53 +123,21 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
      */
     @Override
     public void onResponse(String response) {
-        ContentValues[] contentValues = RecipeJSONUtils.parseRecipeList(response);
-        if(contentValues == null){
-            showErrorMessage();
-        }
-        else
+
+        if(response!= null)
         {
-            mAsync = new RecipeAsyncTask(this, this);
-            mAsync.execute(contentValues);
+            mAsync = new RecipeAsyncTask(this);
+            mAsync.execute(response);
             mQueue.cancelAll(VOLLEY_TAG);
             mQueue = null;
         }
+        else
+            showErrorMessage();
     }
 
 
-
     @Override
-    public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-        switch(id){
-            case ID_RECIPE_LOADER:{
-
-                return new CursorLoader(    this,
-                                                RecipeDB.buildQueryAllRecipes(),
-                                                null,
-                                                null,
-                                                null,
-                                                null);
-
-            }
-            default: throw new UnsupportedOperationException("UKNOWN LOADER ID: " + Integer.toString(id));
-        }
-
-    }
-
-    @Override
-    public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
-        setupRecyclerView(data);
-    }
-
-    @Override
-    public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
-        mAdapter.setRecipeData(null);
-    }
-
-    @Override
-    public void onRecipeDataLoaded() {
-        getSupportLoaderManager().restartLoader(ID_RECIPE_LOADER, null, null);
-        mRecyclerView.setVisibility(View.VISIBLE);
+    public void onParseRecipeDataResult(List<Recipe> recipes) {
+        mAdapter.setRecipeData(recipes);
     }
 }

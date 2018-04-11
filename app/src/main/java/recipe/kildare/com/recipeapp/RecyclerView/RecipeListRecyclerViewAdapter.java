@@ -2,13 +2,14 @@ package recipe.kildare.com.recipeapp.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import recipe.kildare.com.recipeapp.Entities.Recipe;
@@ -25,7 +26,7 @@ public class RecipeListRecyclerViewAdapter extends RecyclerView.Adapter<RecipeLi
 
 
         private final RecipeListActivity mParentActivity;
-        private Cursor mCursor;
+        private List<Recipe> mList;
         private final boolean mTwoPane;
 
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -50,14 +51,14 @@ public class RecipeListRecyclerViewAdapter extends RecyclerView.Adapter<RecipeLi
             }
         };
 
-        public RecipeListRecyclerViewAdapter(RecipeListActivity parent, Cursor cursor, boolean twoPane) {
-            mCursor = null;
+        public RecipeListRecyclerViewAdapter(RecipeListActivity parent, List<Recipe> recipes, boolean twoPane) {
+            recipes = null;
             mParentActivity = parent;
             mTwoPane = twoPane;
         }
 
-        public void setRecipeData(Cursor cursor){
-            mCursor = cursor;
+        public void setRecipeData(List<Recipe> recipes){
+            mList = recipes;
             notifyDataSetChanged();
         }
 
@@ -71,22 +72,22 @@ public class RecipeListRecyclerViewAdapter extends RecyclerView.Adapter<RecipeLi
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
 
-            mCursor.moveToFirst();
-            mCursor.moveToPosition(position);
 
-            holder.mIdView.setText(mCursor.getString(Recipe.INDEX_RECIPE_TITLE));
-            holder.mContentView.setText(mCursor.getString(Recipe.INDEX_RECIPE_IMAGE));
+            Recipe recipe = mList.get(position);
 
-            holder.itemView.setTag(mCursor.getString(Recipe.INDEX_RECIPE_ID));
+            holder.mIdView.setText(recipe.getTitle());
+            holder.mContentView.setText();
+
+            holder.itemView.setTag(recipe.getRecipe_ID());
             holder.itemView.setOnClickListener(mOnClickListener);
         }
 
         @Override
         public int getItemCount() {
-            if(mCursor == null)
+            if(mList == null)
                 return 0;
 
-            return mCursor.getCount();
+            return mList.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
