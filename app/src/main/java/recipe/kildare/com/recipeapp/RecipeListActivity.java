@@ -1,30 +1,29 @@
 package recipe.kildare.com.recipeapp;
 
-import android.content.Context;
-import android.content.Intent;
+import android.content.ContentValues;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import recipe.kildare.com.recipeapp.Network.RecipeJSONUtils;
-import recipe.kildare.com.recipeapp.Network.NetworkUtils;
+import recipe.kildare.com.recipeapp.RecyclerView.RecipeListRecyclerViewAdapter;
+import recipe.kildare.com.recipeapp.persistence.RecipeDB;
+import recipe.kildare.com.recipeapp.persistence.RecipeDataLoad;
 
 /**
  * An activity representing a list of Recipes. This activity
@@ -34,7 +33,9 @@ import recipe.kildare.com.recipeapp.Network.NetworkUtils;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class RecipeListActivity extends AppCompatActivity implements Response.ErrorListener, Response.Listener<String> {
+public class RecipeListActivity extends AppCompatActivity implements    Response.ErrorListener,
+                                                                        Response.Listener<String>,
+        LoaderManager.LoaderCallbacks<Cursor>,RecipeDataLoad {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -43,12 +44,19 @@ public class RecipeListActivity extends AppCompatActivity implements Response.Er
 
     private static final String VOLLEY_TAG = "RECIPE_LIST_TAG";
 
+    private final int ID_RECIPE_LOADER = 77;
+
     private RequestQueue mQueue;
 
     private boolean mTwoPane;
 
+    private RecipeListRecyclerViewAdapter mAdapter;
+
+    private RecipeAsyncTask mAsync;
+
     @BindView(R2.id.toolbar) Toolbar toolbar;
     @BindView(R2.id.fab) FloatingActionButton fab;
+    @BindView(R2.id.recipe_list) RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,27 +84,19 @@ public class RecipeListActivity extends AppCompatActivity implements Response.Er
             mTwoPane = true;
         }
 
-            View recyclerView = findViewById(R.id.recipe_list);
-        assert recyclerView != null;
-
-        setupRecyclerView((RecyclerView) recyclerView);
+        getSupportLoaderManager().initLoader(ID_RECIPE_LOADER, null, null);
     }
 
     /**
      * Configures the recyclerView with data from the adapter. If none exists, will fetch the data online
-     * @param recyclerView
      */
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
+    private void setupRecyclerView(Cursor data) {
 
-        if(recyclerView.getAdapter() == null){
-            mQueue = NetworkUtils.getRecipeListFromServer(this, this, this);
-            showLoadingBar();
-        }
-
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+        if(mAdapter == null)
+            mAdapter.setRecipeData(data);
+        else
+            mAdapter = new RecipeListRecyclerViewAdapter(this, data, mTwoPane);
     }
-
-
 
 
     @Override
@@ -117,10 +117,59 @@ public class RecipeListActivity extends AppCompatActivity implements Response.Er
         mQueue = null;
     }
 
+    /**
+     * When the data is received, parse and insert the data in background
+     * @param response
+     */
     @Override
     public void onResponse(String response) {
-        RecipeJSONUtils.parseRecipeList(response);
-        mQueue.cancelAll(VOLLEY_TAG);
-        mQueue = null;
+        ContentValues[] contentValues = RecipeJSONUtils.parseRecipeList(response);
+        if(contentValues == null){
+            showErrorMessage();
+        }
+        else
+        {
+            mAsync = new RecipeAsyncTask(this, this);
+            mAsync.execute(contentValues);
+            mQueue.cancelAll(VOLLEY_TAG);
+            mQueue = null;
+        }
+    }
+
+
+
+    @Override
+    public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        switch(id){
+            case ID_RECIPE_LOADER:{
+
+                return new CursorLoader(    this,
+                                                RecipeDB.buildQueryAllRecipes(),
+                                                null,
+                                                null,
+                                                null,
+                                                null);
+
+            }
+            default: throw new UnsupportedOperationException("UKNOWN LOADER ID: " + Integer.toString(id));
+        }
+
+    }
+
+    @Override
+    public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
+        setupRecyclerView(data);
+    }
+
+    @Override
+    public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
+        mAdapter.setRecipeData(null);
+    }
+
+    @Override
+    public void onRecipeDataLoaded() {
+        getSupportLoaderManager().restartLoader(ID_RECIPE_LOADER, null, null);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 }

@@ -2,6 +2,7 @@ package recipe.kildare.com.recipeapp.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,8 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.List;
-
+import butterknife.BindView;
 import recipe.kildare.com.recipeapp.Entities.Recipe;
 import recipe.kildare.com.recipeapp.R;
 import recipe.kildare.com.recipeapp.RecipeDetailActivity;
@@ -25,8 +25,9 @@ public class RecipeListRecyclerViewAdapter extends RecyclerView.Adapter<RecipeLi
 
 
         private final RecipeListActivity mParentActivity;
-        private final List<Recipe> mValues;
+        private Cursor mCursor;
         private final boolean mTwoPane;
+
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,12 +50,15 @@ public class RecipeListRecyclerViewAdapter extends RecyclerView.Adapter<RecipeLi
             }
         };
 
-        RecipeListRecyclerViewAdapter(RecipeListActivity parent,
-                                      List<Recipe> items,
-                                      boolean twoPane) {
-            mValues = items;
+        public RecipeListRecyclerViewAdapter(RecipeListActivity parent, Cursor cursor, boolean twoPane) {
+            mCursor = null;
             mParentActivity = parent;
             mTwoPane = twoPane;
+        }
+
+        public void setRecipeData(Cursor cursor){
+            mCursor = cursor;
+            notifyDataSetChanged();
         }
 
         @Override
@@ -66,26 +70,33 @@ public class RecipeListRecyclerViewAdapter extends RecyclerView.Adapter<RecipeLi
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).Recipe_ID);
-            holder.mContentView.setText(mValues.get(position).getIngredientList());
 
-            holder.itemView.setTag(mValues.get(position));
+            mCursor.moveToFirst();
+            mCursor.moveToPosition(position);
+
+            holder.mIdView.setText(mCursor.getString(Recipe.INDEX_RECIPE_TITLE));
+            holder.mContentView.setText(mCursor.getString(Recipe.INDEX_RECIPE_IMAGE));
+
+            holder.itemView.setTag(mCursor.getString(Recipe.INDEX_RECIPE_ID));
             holder.itemView.setOnClickListener(mOnClickListener);
         }
 
         @Override
         public int getItemCount() {
-            return mValues.size();
+            if(mCursor == null)
+                return 0;
+
+            return mCursor.getCount();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            final TextView mIdView;
-            final TextView mContentView;
+
+            @BindView(R2.id.id_text) TextView mIdView;
+            @BindView(R2.id.content) TextView mContentView;
 
             ViewHolder(View view) {
                 super(view);
-                mIdView = (TextView) view.findViewById(R.id.id_text);
-                mContentView = (TextView) view.findViewById(R.id.content);
+
             }
         }
 }

@@ -32,6 +32,12 @@ public class RecipeDB implements BaseColumns
                                         ") ON CONFLICT IGNORE)";
     }
 
+    public static Uri buildQueryAllRecipes()
+    {
+        Uri uri = RecipeDbContract.BASE_CONTENT_URI.buildUpon().appendPath(RecipeDbContract.PATH_RECIPE).build();
+        return uri;
+    }
+
     public static Uri buildQueryRecipeId(String id)
     {
         Uri uri = RecipeDbContract.BASE_CONTENT_URI.buildUpon().appendPath(RecipeDbContract.PATH_RECIPE).appendPath(id).build();

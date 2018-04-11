@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import recipe.kildare.com.recipeapp.persistence.RecipeDB;
 import recipe.kildare.com.recipeapp.persistence.RecipeDbContract;
 
 /**
@@ -44,9 +45,9 @@ public class RecipeJSONUtils {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 
                 ContentValues contentValue = new ContentValues();
-                contentValue.put(RecipeDbContract.RecipeEntry.COLUMN_ID, jsonObject.getString(RECIPE_ID));
-                contentValue.put(RecipeDbContract.RecipeEntry.COLUMN_IMAGE, jsonObject.getString(IMAGE_URL));
-                contentValue.put(RecipeDbContract.RecipeEntry.COLUMN_TITLE, jsonObject.getString(TITLE));
+                contentValue.put(RecipeDB.COLUMN_ID, jsonObject.getString(RECIPE_ID));
+                contentValue.put(RecipeDB.COLUMN_IMAGE, jsonObject.getString(IMAGE_URL));
+                contentValue.put(RecipeDB.COLUMN_TITLE, jsonObject.getString(TITLE));
 
                 contentValues[i] = contentValue;
             }
@@ -60,23 +61,22 @@ public class RecipeJSONUtils {
     }
 
 
-    public static ContentValues[] parseRecipeDetail(String response) {
+    public static ContentValues[] parseRecipeIngredient(String response) {
 
         try {
             JSONObject json = new JSONObject(response);
 
-            JSONArray jsonArray = json.getJSONArray(RecipeJSONUtils.RECIPE);
-
+            JSONObject jsonObject = json.getJSONObject(RecipeJSONUtils.RECIPE);
+            JSONArray jsonArray = jsonObject.getJSONArray(RecipeJSONUtils.INGREDIENTS);
             ContentValues[] contentValues = new ContentValues[jsonArray.length()];
 
             for(int i=0; i < jsonArray.length() ; i++){
 
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String ingredient = (String) jsonArray.get(i);
 
                 ContentValues contentValue = new ContentValues();
-                contentValue.put(RecipeDbContract.RecipeEntry.COLUMN_ID, jsonObject.getString(RECIPE_ID));
-                contentValue.put(RecipeDbContract.RecipeEntry.COLUMN_IMAGE, jsonObject.getString(IMAGE_URL));
-                contentValue.put(RecipeDbContract.RecipeEntry.COLUMN_TITLE, jsonObject.getString(TITLE));
+
+                contentValue.put(Integer.toString(i), ingredient);
 
                 contentValues[i] = contentValue;
             }
