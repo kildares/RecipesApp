@@ -16,7 +16,7 @@ import recipe.kildare.com.recipeapp.Network.RecipeJSONUtils;
 public class RecipeAsyncTask extends AsyncTask<String, Void, Integer> {
 
     ParseRecipeData mParseRecipeData;
-
+    List<Recipe> mParsedData;
     public RecipeAsyncTask(ParseRecipeData parseRecipeData){
         this.mParseRecipeData = parseRecipeData;
     }
@@ -27,10 +27,15 @@ public class RecipeAsyncTask extends AsyncTask<String, Void, Integer> {
         if(data == null || data.length == 0){
             return 0;
         }
-        List<Recipe> parsedData = RecipeJSONUtils.parseRecipeList(data[0]);
+        mParsedData = RecipeJSONUtils.parseRecipeList(data[0]);
 
-        mParseRecipeData.onParseRecipeDataResult(parsedData);
-        return parsedData.size();
+
+        return mParsedData.size();
     }
 
+    @Override
+    protected void onPostExecute(Integer integer) {
+        mParseRecipeData.onParseRecipeDataResult(mParsedData);
+        mParsedData = null;
+    }
 }

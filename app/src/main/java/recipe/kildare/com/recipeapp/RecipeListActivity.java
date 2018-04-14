@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 
 import com.android.volley.RequestQueue;
@@ -18,6 +20,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import recipe.kildare.com.recipeapp.Entities.Recipe;
+import recipe.kildare.com.recipeapp.Network.NetworkUtils;
 import recipe.kildare.com.recipeapp.RecyclerView.ParseRecipeData;
 import recipe.kildare.com.recipeapp.RecyclerView.RecipeAsyncTask;
 import recipe.kildare.com.recipeapp.RecyclerView.RecipeListRecyclerViewAdapter;
@@ -33,9 +36,7 @@ import recipe.kildare.com.recipeapp.RecyclerView.RecipeListRecyclerViewAdapter;
 public class RecipeListActivity extends AppCompatActivity implements    Response.ErrorListener,
                                                                         Response.Listener<String>,
                                                                         ParseRecipeData
-
-
-{
+                                                                        {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -43,8 +44,6 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
      */
 
     private static final String VOLLEY_TAG = "RECIPE_LIST_TAG";
-
-    private final int ID_RECIPE_LOADER = 77;
 
     private RequestQueue mQueue;
 
@@ -54,9 +53,11 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
 
     private RecipeAsyncTask mAsync;
 
-    @BindView(R2.id.toolbar) Toolbar toolbar;
-    @BindView(R2.id.fab) FloatingActionButton fab;
-    @BindView(R2.id.recipe_list) RecyclerView mRecyclerView;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.recipe_list) RecyclerView mRecyclerView;
+    @BindView(R.id.fl_recycler_view) FrameLayout mFrame;
+    @BindView(R.id.tv_error) TextView mErrorMsg;
+    @BindView(R.id.pb_loading) ProgressBar mLoadingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,14 +69,6 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         if (findViewById(R.id.recipe_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
@@ -84,20 +77,39 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
             mTwoPane = true;
         }
 
-        getSupportLoaderManager().initLoader(ID_RECIPE_LOADER, null, null);
+        loadData();
     }
+
+    public void loadData()
+    {
+        if(mAdapter == null || mAdapter.getItemCount() <=0) {
+            NetworkUtils.getRecipeListFromServer(this, this,this);
+            mLoadingBar.setVisibility(View.VISIBLE);
+            mErrorMsg.setVisibility(View.INVISIBLE);
+        }
+        else{
+            mLoadingBar.setVisibility(View.VISIBLE);
+            mErrorMsg.setVisibility(View.INVISIBLE);
+        }
+    }
+
 
     /**
      * Configures the recyclerView with data from the adapter. If none exists, will fetch the data online
      */
     private void setupRecyclerView(List<Recipe> data) {
 
-        if(mAdapter == null)
+        if(mAdapter != null)
             mAdapter.setRecipeData(data);
-        else
+        else{
             mAdapter = new RecipeListRecyclerViewAdapter(this, data, mTwoPane);
-    }
+            mRecyclerView.setAdapter(mAdapter);
+        }
 
+        mRecyclerView.setVisibility(View.VISIBLE);
+        mErrorMsg.setVisibility(View.INVISIBLE);
+        mLoadingBar.setVisibility(View.INVISIBLE);
+    }
 
     @Override
     protected void onStop() {
@@ -106,7 +118,6 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
         if(mQueue != null){
             mQueue.cancelAll(VOLLEY_TAG);
         }
-
     }
 
     @Override
@@ -126,18 +137,26 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
 
         if(response!= null)
         {
+            Log.d("RESPONSE",response);
             mAsync = new RecipeAsyncTask(this);
             mAsync.execute(response);
-            mQueue.cancelAll(VOLLEY_TAG);
+            if(mQueue!= null)
+                mQueue.cancelAll(VOLLEY_TAG);
             mQueue = null;
         }
         else
             showErrorMessage();
     }
 
-
     @Override
     public void onParseRecipeDataResult(List<Recipe> recipes) {
-        mAdapter.setRecipeData(recipes);
+        setupRecyclerView(recipes);
+    }
+
+    public void showErrorMessage()
+    {
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mErrorMsg.setVisibility(View.VISIBLE);
+        mLoadingBar.setVisibility(View.INVISIBLE);
     }
 }

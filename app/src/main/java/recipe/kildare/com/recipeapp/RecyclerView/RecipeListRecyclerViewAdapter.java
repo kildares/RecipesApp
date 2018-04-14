@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import recipe.kildare.com.recipeapp.Entities.Recipe;
 import recipe.kildare.com.recipeapp.R;
 import recipe.kildare.com.recipeapp.RecipeDetailActivity;
@@ -35,7 +36,7 @@ public class RecipeListRecyclerViewAdapter extends RecyclerView.Adapter<RecipeLi
                 Recipe recipe = (Recipe) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, recipe.Recipe_ID);
+                    arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, recipe.getRecipe_ID());
                     RecipeDetailFragment fragment = new RecipeDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -44,7 +45,7 @@ public class RecipeListRecyclerViewAdapter extends RecyclerView.Adapter<RecipeLi
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, RecipeDetailActivity.class);
-                    intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, recipe.Recipe_ID);
+                    intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, recipe.getRecipe_ID());
 
                     context.startActivity(intent);
                 }
@@ -52,7 +53,7 @@ public class RecipeListRecyclerViewAdapter extends RecyclerView.Adapter<RecipeLi
         };
 
         public RecipeListRecyclerViewAdapter(RecipeListActivity parent, List<Recipe> recipes, boolean twoPane) {
-            recipes = null;
+            mList = recipes;
             mParentActivity = parent;
             mTwoPane = twoPane;
         }
@@ -72,11 +73,8 @@ public class RecipeListRecyclerViewAdapter extends RecyclerView.Adapter<RecipeLi
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
 
-
             Recipe recipe = mList.get(position);
-
-            holder.mIdView.setText(recipe.getTitle());
-            holder.mContentView.setText();
+            holder.mTitle.setText(recipe.getTitle());
 
             holder.itemView.setTag(recipe.getRecipe_ID());
             holder.itemView.setOnClickListener(mOnClickListener);
@@ -92,12 +90,11 @@ public class RecipeListRecyclerViewAdapter extends RecyclerView.Adapter<RecipeLi
 
         class ViewHolder extends RecyclerView.ViewHolder {
 
-            @BindView(R2.id.id_text) TextView mIdView;
-            @BindView(R2.id.content) TextView mContentView;
-
+            //@BindView(R.id.tv_title)
+            TextView mTitle;
             ViewHolder(View view) {
                 super(view);
-
+                mTitle = view.findViewById(R.id.tv_title);
             }
         }
 }
