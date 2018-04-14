@@ -1,5 +1,7 @@
 package recipe.kildare.com.recipeapp;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -35,7 +37,8 @@ import recipe.kildare.com.recipeapp.RecyclerView.RecipeListRecyclerViewAdapter;
  */
 public class RecipeListActivity extends AppCompatActivity implements    Response.ErrorListener,
                                                                         Response.Listener<String>,
-                                                                        ParseRecipeData
+                                                                        ParseRecipeData,
+                                                                        LoadRecipeOnFragment
                                                                         {
 
     /**
@@ -69,7 +72,7 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        if (findViewById(R.id.recipe_detail_container) != null) {
+        if (findViewById(R.id.fg_recipe_detail) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
             // If this view is present, then the
@@ -102,7 +105,7 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
         if(mAdapter != null)
             mAdapter.setRecipeData(data);
         else{
-            mAdapter = new RecipeListRecyclerViewAdapter(this, data, mTwoPane);
+            mAdapter = new RecipeListRecyclerViewAdapter(this, data, this);
             mRecyclerView.setAdapter(mAdapter);
         }
 
@@ -158,5 +161,23 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
         mRecyclerView.setVisibility(View.INVISIBLE);
         mErrorMsg.setVisibility(View.VISIBLE);
         mLoadingBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void loadRecipeData(Recipe recipe) {
+        if (mTwoPane)
+        {
+            Bundle arguments = new Bundle();
+            arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, recipe.getRecipe_ID());
+            RecipeDetailFragment fragment = new RecipeDetailFragment();
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fg_recipe_detail, fragment)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, RecipeDetailActivity.class);
+            intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, recipe.getRecipe_ID());
+            startActivity(intent);
+        }
     }
 }

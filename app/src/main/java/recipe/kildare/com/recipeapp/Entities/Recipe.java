@@ -1,12 +1,15 @@
 package recipe.kildare.com.recipeapp.Entities;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
  * Created by kilda on 4/10/2018.
  */
 
-public class Recipe {
+public class Recipe implements Parcelable {
 
     private String Title;
     private String Image_URL;
@@ -14,6 +17,7 @@ public class Recipe {
     private List<Ingredient> Ingredients;
     private List<Step> Steps;
     private String Servings;
+
     public Recipe(String recipe_ID, String title, List<Ingredient> ingredients, List<Step> steps, String servings, String imageUrl){
         Recipe_ID = recipe_ID;
         this.Title = title;
@@ -22,6 +26,18 @@ public class Recipe {
         Servings = servings;
         Image_URL = imageUrl;
     }
+
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
 
     public String getTitle() {
         return Title;
@@ -61,5 +77,31 @@ public class Recipe {
 
     public void setSteps(List<Step> steps) {
         Steps = steps;
+    }
+
+    private Recipe(Parcel parcel)
+    {
+        this.Title = parcel.readString();
+        this.Image_URL = parcel.readString();
+        this.Recipe_ID = parcel.readString();
+        this.Ingredients = parcel.readArrayList(Ingredient.class.getClassLoader());
+        this.Steps = parcel.readArrayList(Step.class.getClassLoader());
+        this.Servings = parcel.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
+        parcel.writeString(this.Title);
+        parcel.writeString(this.Image_URL);
+        parcel.writeString(this.Recipe_ID);
+        parcel.writeList(Ingredients);
+        parcel.writeList(Steps);
+        parcel.writeString(Servings);
     }
 }

@@ -1,10 +1,13 @@
 package recipe.kildare.com.recipeapp.Entities;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by kilda on 4/10/2018.
  */
 
-public class Ingredient {
+public class Ingredient implements Parcelable {
 
     public String Quantity;
     public String Measure;
@@ -15,6 +18,26 @@ public class Ingredient {
         this.Quantity = quantity;
         this.Measure = measure;
     }
+
+    private Ingredient(Parcel parcel)
+    {
+        this.Quantity = parcel.readString();
+        this.Measure = parcel.readString();
+        this.Name = parcel.readString();
+    }
+
+    public static final Parcelable.Creator<Ingredient> CREATOR = new Parcelable.Creator<Ingredient>(){
+
+        @Override
+        public Ingredient createFromParcel(Parcel parcel) {
+            return new Ingredient(parcel);
+        }
+
+        @Override
+        public Ingredient[] newArray(int i) {
+            return new Ingredient[i];
+        }
+    };
 
     public String getQuantity() {
         return Quantity;
@@ -39,4 +62,18 @@ public class Ingredient {
     public void setName(String name) {
         Name = name;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(this.Quantity);
+        parcel.writeString(this.Measure);
+        parcel.writeString(this.Name);
+    }
+
 }

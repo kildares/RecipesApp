@@ -11,12 +11,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
 import recipe.kildare.com.recipeapp.Entities.Recipe;
+import recipe.kildare.com.recipeapp.LoadRecipeOnFragment;
 import recipe.kildare.com.recipeapp.R;
-import recipe.kildare.com.recipeapp.RecipeDetailActivity;
-import recipe.kildare.com.recipeapp.RecipeDetailFragment;
 import recipe.kildare.com.recipeapp.RecipeListActivity;
 
 /**
@@ -25,37 +22,15 @@ import recipe.kildare.com.recipeapp.RecipeListActivity;
 
 public class RecipeListRecyclerViewAdapter extends RecyclerView.Adapter<RecipeListRecyclerViewAdapter.ViewHolder> {
 
+        LoadRecipeOnFragment mLoadRecipeOnFragment;
 
         private final RecipeListActivity mParentActivity;
         private List<Recipe> mList;
-        private final boolean mTwoPane;
 
-        private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Recipe recipe = (Recipe) view.getTag();
-                if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, recipe.getRecipe_ID());
-                    RecipeDetailFragment fragment = new RecipeDetailFragment();
-                    fragment.setArguments(arguments);
-                    mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.recipe_detail_container, fragment)
-                            .commit();
-                } else {
-                    Context context = view.getContext();
-                    Intent intent = new Intent(context, RecipeDetailActivity.class);
-                    intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, recipe.getRecipe_ID());
-
-                    context.startActivity(intent);
-                }
-            }
-        };
-
-        public RecipeListRecyclerViewAdapter(RecipeListActivity parent, List<Recipe> recipes, boolean twoPane) {
+        public RecipeListRecyclerViewAdapter(RecipeListActivity parent, List<Recipe> recipes, LoadRecipeOnFragment loadRecipeOnFragment) {
             mList = recipes;
             mParentActivity = parent;
-            mTwoPane = twoPane;
+            mLoadRecipeOnFragment = loadRecipeOnFragment;
         }
 
         public void setRecipeData(List<Recipe> recipes){
@@ -77,7 +52,8 @@ public class RecipeListRecyclerViewAdapter extends RecyclerView.Adapter<RecipeLi
             holder.mTitle.setText(recipe.getTitle());
 
             holder.itemView.setTag(recipe.getRecipe_ID());
-            holder.itemView.setOnClickListener(mOnClickListener);
+            holder.itemView.setOnClickListener(view -> mLoadRecipeOnFragment.loadRecipeData(recipe));
+
         }
 
         @Override
