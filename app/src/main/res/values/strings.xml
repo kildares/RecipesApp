@@ -7,4 +7,6 @@
     <string name="ingredient_title">Ingredients</string>
     <string name="step_title">Steps</string>
 
+    <string name="key_recipe_data">KEY_RECIPE_DATA</string>
+
 </resources>

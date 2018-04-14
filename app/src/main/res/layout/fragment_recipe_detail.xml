@@ -11,7 +11,8 @@
         android:layout_weight="1"/>
 
     <ListView
-        android:layout_height="@+id/lv_ingredients"
+        android:id="@+id/lv_ingredients"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_weight="1"/>
 

@@ -8,24 +8,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
 import java.util.List;
-import recipe.kildare.com.recipeapp.R;
 
 import recipe.kildare.com.recipeapp.Entities.Ingredient;
+import recipe.kildare.com.recipeapp.Entities.Step;
+import recipe.kildare.com.recipeapp.R;
 
 /**
  * Created by kilda on 4/14/2018.
  */
 
-public class IngredientAdapter extends ArrayAdapter<Ingredient> {
+public class StepAdapter extends ArrayAdapter<Step> {
 
-    List<Ingredient> mIngredients;
+    List<Step> mSteps;
     Context mContext;
 
-    public IngredientAdapter(@NonNull Context context, List<Ingredient> list) {
-        super(context, 0, list);
+    public StepAdapter(@NonNull Context context, List<Step> step) {
+        super(context, 0, step);
         mContext = context;
-        mIngredients = list;
+        mSteps = step;
     }
 
     @NonNull
@@ -33,16 +35,9 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view;
         LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
-
-        view = layoutInflater.inflate(R.layout.ingredient_details, parent, false);
-        TextView name = view.findViewById(R.id.tv_ingredient_title);
-        TextView measure = view.findViewById(R.id.tv_ingredient_measure);
-        TextView quantity = view.findViewById(R.id.tv_ingredient_quantity);
-
-        name.setText(mIngredients.get(position).getName());
-        measure.setText(mIngredients.get(position).getMeasure());
-        quantity.setText(mIngredients.get(position).getQuantity());
-
+        view = layoutInflater.inflate(R.layout.step_details, parent, false);
+        TextView name = view.findViewById(R.id.tv_step_short_description);
+        name.setText(mSteps.get(position).getShortDescription());
         return view;
     }
 }

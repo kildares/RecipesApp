@@ -177,6 +177,7 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
         } else {
             Intent intent = new Intent(this, RecipeDetailActivity.class);
             intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, recipe.getRecipe_ID());
+            intent.putExtra(getString(R.string.key_recipe_data),recipe);
             startActivity(intent);
         }
     }

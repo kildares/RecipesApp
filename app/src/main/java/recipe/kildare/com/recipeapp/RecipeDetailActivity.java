@@ -29,15 +29,26 @@ public class RecipeDetailActivity extends AppCompatActivity {
         // http://developer.android.com/guide/components/fragments.html
         //
         if (savedInstanceState == null) {
+
+
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
             arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID));
             RecipeDetailFragment fragment = new RecipeDetailFragment();
+            fragment.mContext = this;
+
+            Bundle intentBundle = getIntent().getExtras();
+            if(intentBundle!= null){
+                fragment.setCurrentRecipe(intentBundle.getParcelable(getApplicationContext().getString(R.string.key_recipe_data)));
+            }
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction().replace(R.id.fg_recipe_detail, fragment).commit();
+
         }
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
