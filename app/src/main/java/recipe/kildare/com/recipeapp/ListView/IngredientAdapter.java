@@ -40,8 +40,8 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient> {
         TextView quantity = view.findViewById(R.id.tv_ingredient_quantity);
 
         name.setText(mIngredients.get(position).getName());
-        measure.setText(mIngredients.get(position).getMeasure());
-        quantity.setText(mIngredients.get(position).getQuantity());
+        measure.setText(getContext().getString(R.string.ingredient_detail_measure) + " " + mIngredients.get(position).getMeasure());
+        quantity.setText(getContext().getString(R.string.ingredient_detail_quantity) + " " + mIngredients.get(position).getQuantity());
 
         return view;
     }

@@ -17,4 +17,12 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="ingredient_step" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textSize">@dimen/text_size</item>
+    </style>
+
+    <style name="ingredient_step_title" parent="ingredient_step">
+        <item name="android:layout_marginLeft">@dimen/layout_margin</item>
+    </style>
+
 </resources>
