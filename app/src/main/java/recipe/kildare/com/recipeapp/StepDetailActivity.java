@@ -3,6 +3,7 @@ package recipe.kildare.com.recipeapp;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -49,13 +50,18 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
         ButterKnife.bind(this);
         mStep = getIntent().getExtras().getParcelable(getString(R.string.key_step_data));
 
-        mFullStepDescription.setText(mStep.getDescription());
+        String description = mStep.getDescription();
+
+        mFullStepDescription.setText(description);
 
         String videoUrl = mStep.getVideoURL();
-        if(videoUrl != null || !videoUrl.isEmpty()){
+        if(videoUrl != null && !videoUrl.isEmpty()){
             Uri videoUri = Uri.parse(videoUrl);
             initializePlayer(videoUri);
+            mExoPlayerView.setVisibility(View.VISIBLE);
         }
+        else
+            mExoPlayerView.setVisibility(View.INVISIBLE);
 
     }
 
@@ -81,9 +87,12 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
 
     public void releasePlayer()
     {
-        mExoPlayer.stop();
-        mExoPlayer.release();
-        mExoPlayer = null;
+        if(mExoPlayer != null){
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
+
     }
 
     @Override

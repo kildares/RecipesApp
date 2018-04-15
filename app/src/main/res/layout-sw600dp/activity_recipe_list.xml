@@ -23,20 +23,37 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/fl_recycler_view"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
 
-        <include layout="@layout/recipe_list" />
-    </FrameLayout>
+        <FrameLayout
+            android:id="@+id/fl_recycler_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <include layout="@layout/recipe_list" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fg_recipe_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:name="recipe.kildare.com.recipeapp.RecipeDetailFragment"
+            />
+
+
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/pb_loading"
         android:layout_height="42dp"
         android:layout_width="42dp"
         android:layout_gravity="center"/>
+
     <TextView
         android:id="@+id/tv_error"
         android:text="@string/load_error"
@@ -44,8 +61,5 @@
         android:layout_height="wrap_content"
         style="@style/ingredient_step"
         android:textAlignment="center"/>
-
-    />
-
 
 </LinearLayout>

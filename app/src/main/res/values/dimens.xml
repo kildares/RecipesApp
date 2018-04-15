@@ -8,4 +8,5 @@
     <dimen name="text_size">16dp</dimen>
     <dimen name="text_size_small">12dp</dimen>
     <dimen name="layout_margin">8dp</dimen>
+    <dimen name="layout_margin_small">4dp</dimen>
 </resources>

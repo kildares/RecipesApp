@@ -62,6 +62,7 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
     @BindView(R.id.tv_error) TextView mErrorMsg;
     @BindView(R.id.pb_loading) ProgressBar mLoadingBar;
 
+    FrameLayout mRecipeDetail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,10 +75,11 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
 
         if (findViewById(R.id.fg_recipe_detail) != null) {
             // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
+            // large-screen layouts (res/values-w600dp).
             // If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;
+            mRecipeDetail = findViewById(R.id.fg_recipe_detail);
         }
 
         loadData();
@@ -85,8 +87,11 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
 
     public void loadData()
     {
+
+
         if(mAdapter == null || mAdapter.getItemCount() <=0) {
             NetworkUtils.getRecipeListFromServer(this, this,this);
+            mRecyclerView.setVisibility(View.INVISIBLE);
             mLoadingBar.setVisibility(View.VISIBLE);
             mErrorMsg.setVisibility(View.INVISIBLE);
         }
@@ -95,7 +100,6 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
             mErrorMsg.setVisibility(View.INVISIBLE);
         }
     }
-
 
     /**
      * Configures the recyclerView with data from the adapter. If none exists, will fetch the data online
@@ -127,7 +131,8 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
     public void onErrorResponse(VolleyError error) {
 
         showErrorMessage();
-        mQueue.cancelAll(VOLLEY_TAG);
+            if(mQueue != null)
+            mQueue.cancelAll(VOLLEY_TAG);
         mQueue = null;
     }
 
@@ -165,12 +170,15 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
 
     @Override
     public void loadRecipeData(Recipe recipe) {
+
         if (mTwoPane)
         {
             Bundle arguments = new Bundle();
             arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, recipe.getRecipe_ID());
             RecipeDetailFragment fragment = new RecipeDetailFragment();
             fragment.setArguments(arguments);
+            fragment.mContext=this;
+            fragment.setCurrentRecipe(recipe);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fg_recipe_detail, fragment)
                     .commit();
