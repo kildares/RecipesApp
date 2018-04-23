@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import recipe.kildare.com.recipeapp.Entities.Recipe;
+import recipe.kildare.com.recipeapp.utils.RecipeUtils;
+
 /**
  * An activity representing a single Recipe detail screen. This
  * activity is only used on narrow width devices. On tablet-size devices,
@@ -13,11 +16,17 @@ import android.view.MenuItem;
  */
 public class RecipeDetailActivity extends AppCompatActivity {
 
+
+    private boolean mTwoPane;
+    private Recipe mRecipe;
+    private int mChosenOption;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
+        mTwoPane = RecipeUtils.isTwoPane(this);
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
@@ -28,27 +37,50 @@ public class RecipeDetailActivity extends AppCompatActivity {
         //
         // http://developer.android.com/guide/components/fragments.html
         //
-        if (savedInstanceState == null) {
 
-
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID));
-            RecipeDetailFragment fragment = new RecipeDetailFragment();
-            fragment.mContext = this;
-
-            Bundle intentBundle = getIntent().getExtras();
-            if(intentBundle!= null){
-                fragment.setCurrentRecipe(intentBundle.getParcelable(getApplicationContext().getString(R.string.key_recipe_data)));
+        Bundle intentBundle = getIntent().getExtras();
+        if(intentBundle != null)
+        {
+            Recipe recipe = intentBundle.getParcelable(getString(R.string.key_recipe_data));
+            if(recipe != null){
+                mRecipe = recipe;
+                mChosenOption = 0;
             }
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction().replace(R.id.fg_recipe_detail, fragment).commit();
+        }
 
+        if(mTwoPane && savedInstanceState == null){
+            addRecipeDetailsFragment();
+            if(mChosenOption != 0)
+                addRecipeDetailListFragment();
+            else
+                addRecipeIngredientDetailsFragment();
+        }
+        else if(!mTwoPane && savedInstanceState == null){
+            addRecipeDetailsFragment();
         }
     }
 
+    public void addRecipeDetailListFragment()
+    {
+        RecipeDetailListFragment recipeDetailListFragment = new RecipeDetailListFragment();
+        recipeDetailListFragment;
+    }
 
+    public void addRecipeIngredientDetailsFragment()
+    {
+        IngredientDetailFragment ingredientFragment= new IngredientDetailFragment();
+        ingredientFragment.setContext(this);
+        ingredientFragment.setCurrentIngredient(mRecipe.getIngredients());
+        getSupportFragmentManager().beginTransaction().replace(R.id.fg_step_detail, ingredientFragment).commit();
+    }
+
+    public void addRecipeDetailsFragment()
+    {
+        RecipeDetailFragment fragment = new RecipeDetailFragment();
+        fragment.setContext(this);
+        fragment.setSteps(mRecipe.getSteps());
+        getSupportFragmentManager().beginTransaction().add(R.id.fg_recipe_detail_list, fragment).commit();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

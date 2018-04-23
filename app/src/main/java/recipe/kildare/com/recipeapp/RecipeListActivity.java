@@ -2,10 +2,14 @@ package recipe.kildare.com.recipeapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -26,6 +30,7 @@ import recipe.kildare.com.recipeapp.Network.NetworkUtils;
 import recipe.kildare.com.recipeapp.RecyclerView.ParseRecipeData;
 import recipe.kildare.com.recipeapp.RecyclerView.RecipeAsyncTask;
 import recipe.kildare.com.recipeapp.RecyclerView.RecipeListRecyclerViewAdapter;
+import recipe.kildare.com.recipeapp.utils.RecipeUtils;
 
 /**
  * An activity representing a list of Recipes. This activity
@@ -62,7 +67,6 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
     @BindView(R.id.tv_error) TextView mErrorMsg;
     @BindView(R.id.pb_loading) ProgressBar mLoadingBar;
 
-    FrameLayout mRecipeDetail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,22 +77,13 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        if (findViewById(R.id.fg_recipe_detail) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w600dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
-            mTwoPane = true;
-            mRecipeDetail = findViewById(R.id.fg_recipe_detail);
-        }
+        mTwoPane = RecipeUtils.isTwoPane(this);
 
         loadData();
     }
 
     public void loadData()
     {
-
-
         if(mAdapter == null || mAdapter.getItemCount() <=0) {
             NetworkUtils.getRecipeListFromServer(this, this,this);
             mRecyclerView.setVisibility(View.INVISIBLE);
@@ -106,9 +101,17 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
      */
     private void setupRecyclerView(List<Recipe> data) {
 
+        RecyclerView.LayoutManager layoutManager;
+        if(mTwoPane)
+            layoutManager = new GridLayoutManager(this,3);
+        else
+            layoutManager= new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
+
         if(mAdapter != null)
             mAdapter.setRecipeData(data);
-        else{
+        else
+        {
             mAdapter = new RecipeListRecyclerViewAdapter(this, data, this);
             mRecyclerView.setAdapter(mAdapter);
         }
@@ -169,24 +172,14 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
     }
 
     @Override
-    public void loadRecipeData(Recipe recipe) {
+    public void loadRecipeData(Recipe recipe)
+    {
 
-        if (mTwoPane)
-        {
-            Bundle arguments = new Bundle();
-            arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, recipe.getRecipe_ID());
-            RecipeDetailFragment fragment = new RecipeDetailFragment();
-            fragment.setArguments(arguments);
-            fragment.mContext=this;
-            fragment.setCurrentRecipe(recipe);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fg_recipe_detail, fragment)
-                    .commit();
-        } else {
-            Intent intent = new Intent(this, RecipeDetailActivity.class);
-            intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, recipe.getRecipe_ID());
-            intent.putExtra(getString(R.string.key_recipe_data),recipe);
-            startActivity(intent);
-        }
+        Intent intent = new Intent(this, RecipeDetailActivity.class);
+        intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, recipe.getRecipe_ID());
+        intent.putExtra(getString(R.string.key_recipe_data),recipe);
+        startActivity(intent);
+
     }
+
 }

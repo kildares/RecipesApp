@@ -1,8 +1,8 @@
 package recipe.kildare.com.recipeapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.zip.Inflater;
+import java.util.List;
 
-import butterknife.BindView;
 import recipe.kildare.com.recipeapp.Entities.Ingredient;
-import recipe.kildare.com.recipeapp.Entities.Recipe;
 import recipe.kildare.com.recipeapp.Entities.Step;
 import recipe.kildare.com.recipeapp.ListView.IngredientAdapter;
 import recipe.kildare.com.recipeapp.ListView.StepAdapter;
@@ -25,7 +23,7 @@ import recipe.kildare.com.recipeapp.ListView.StepAdapter;
  * in two-pane mode (on tablets) or a {@link RecipeDetailActivity}
  * on handsets.
  */
-public class RecipeDetailFragment extends Fragment{
+public class RecipeDetailFragment extends Fragment implements LoadStepDetail {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
@@ -34,9 +32,7 @@ public class RecipeDetailFragment extends Fragment{
 
     public Context mContext;
 
-    private Recipe mRecipe;
-
-    private ListView mViewIngredients;
+    public List<Step> mSteps;
 
     private ListView mViewSteps;
     /**
@@ -47,11 +43,6 @@ public class RecipeDetailFragment extends Fragment{
 
     }
 
-
-    public void setCurrentRecipe(Recipe recipe){
-        mRecipe = recipe;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,7 +51,7 @@ public class RecipeDetailFragment extends Fragment{
             mRecipe = savedInstanceState.getParcelable(getActivity().getString(R.string.key_recipe_data));
         }
 
-        View rootView = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_recipe_detail_list, container, false);
 
         mViewIngredients = rootView.findViewById(R.id.lv_ingredients);
         mViewSteps = rootView.findViewById(R.id.lv_steps);
@@ -75,7 +66,7 @@ public class RecipeDetailFragment extends Fragment{
         if(mRecipe != null){
             ArrayAdapter<Ingredient> ingredientArrayAdapter = new IngredientAdapter(getActivity(), mRecipe.getIngredients());
             mViewIngredients.setAdapter(ingredientArrayAdapter);
-            ArrayAdapter<Step> stepArrayAdapter = new StepAdapter(getActivity(),mRecipe.getSteps());
+            ArrayAdapter<Step> stepArrayAdapter = new StepAdapter(getActivity(),mRecipe, this);
             mViewSteps.setAdapter(stepArrayAdapter);
         }
     }
@@ -83,5 +74,21 @@ public class RecipeDetailFragment extends Fragment{
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(getActivity().getString(R.string.key_recipe_data),mRecipe);
+    }
+
+    @Override
+    public void loadStepDetail(int position) {
+        Intent intent = new Intent(mContext, StepDetailActivity.class);
+        intent.putExtra(mContext.getString(R.string.key_step_pos), position);
+        intent.putExtra(mContext.getString(R.string.key_recipe_data), mRecipe);
+        mContext.startActivity(intent);
+    }
+
+    public void setContext(Context context) {
+        this.mContext = context;
+    }
+
+    public void setSteps(List<Step> steps) {
+        this.steps = steps;
     }
 }

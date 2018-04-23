@@ -4,14 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RecipeDetailActivity"
-    android:orientation="horizontal">
+    >
 
     <FrameLayout
-        android:id="@+id/fg_recipe_detail_list"
+        android:id="@+id/fg_recipe_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:name="recipe.kildare.com.recipeapp.RecipeDetailFragment"
         />
 
 
+    <FrameLayout
+        android:id="@+id/fg_step_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
 </LinearLayout>

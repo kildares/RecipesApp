@@ -14,7 +14,9 @@ import android.widget.TextView;
 import java.util.List;
 
 import recipe.kildare.com.recipeapp.Entities.Ingredient;
+import recipe.kildare.com.recipeapp.Entities.Recipe;
 import recipe.kildare.com.recipeapp.Entities.Step;
+import recipe.kildare.com.recipeapp.LoadStepDetail;
 import recipe.kildare.com.recipeapp.R;
 import recipe.kildare.com.recipeapp.StepDetailActivity;
 
@@ -24,15 +26,14 @@ import recipe.kildare.com.recipeapp.StepDetailActivity;
 
 public class StepAdapter extends ArrayAdapter<Step> {
 
-    List<Step> mSteps;
+    LoadStepDetail mLoadStepDetail;
     Context mContext;
-
-    private static final String LOG_STEP_ADAPTER = "LOG_STEP_ADAPTER";
-
-    public StepAdapter(@NonNull Context context, List<Step> step) {
-        super(context, 0, step);
+    List<Step> mSteps;
+    public StepAdapter(@NonNull Context context, List<Step> steps, LoadStepDetail loadStepDetail) {
+        super(context, 0, steps);
         mContext = context;
-        mSteps = step;
+        mSteps = steps;
+        mLoadStepDetail = loadStepDetail;
     }
 
     @NonNull
@@ -47,11 +48,7 @@ public class StepAdapter extends ArrayAdapter<Step> {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(LOG_STEP_ADAPTER ,"CHANGING CONTEXT");
-                Step step = mSteps.get(position);
-                Intent intent = new Intent(mContext, StepDetailActivity.class);
-                intent.putExtra(mContext.getString(R.string.key_step_data), step);
-                mContext.startActivity(intent);
+                mLoadStepDetail.loadStepDetail(position);
             }
         });
 

@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -20,6 +22,7 @@ import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
@@ -28,9 +31,11 @@ import org.w3c.dom.Text;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import recipe.kildare.com.recipeapp.Entities.Recipe;
 import recipe.kildare.com.recipeapp.Entities.Step;
+import recipe.kildare.com.recipeapp.ListView.StepAdapter;
 
-public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.EventListener {
+public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.EventListener, LoadStepDetail {
 
     @BindView(R.id.exo_step_detail)
      SimpleExoPlayerView mExoPlayerView;
@@ -38,7 +43,12 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
     @BindView(R.id.tv_step_full_description)
      TextView mFullStepDescription;
 
-    private Step mStep;
+    @BindView(R.id.lv_steps)
+    ListView mStepsView;
+
+    private Recipe mRecipe;
+    private int mStepPosition;
+
 
     private SimpleExoPlayer mExoPlayer;
 
@@ -48,13 +58,33 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
         setContentView(R.layout.activity_step_detail);
 
         ButterKnife.bind(this);
-        mStep = getIntent().getExtras().getParcelable(getString(R.string.key_step_data));
 
-        String description = mStep.getDescription();
+        Bundle extras = getIntent().getExtras();
 
+        mRecipe = extras.getParcelable(getString(R.string.key_recipe_data));
+        mStepPosition = extras.getInt(getString(R.string.key_step_pos));
+
+        loadStepDetail(mStepPosition);
+
+        if (mStepsView != null) {
+            showRecipeList();
+        }
+    }
+
+
+    public void showRecipeList()
+    {
+        ArrayAdapter<Step> stepArrayAdapter = new StepAdapter(this,mRecipe, this);
+        mStepsView.setAdapter(stepArrayAdapter );
+    }
+
+    @Override
+    public void loadStepDetail(int position) {
+        String videoUrl = mRecipe.getSteps().get(mStepPosition).getVideoURL();
+
+        String description = mRecipe.getSteps().get(mStepPosition).getDescription();
         mFullStepDescription.setText(description);
 
-        String videoUrl = mStep.getVideoURL();
         if(videoUrl != null && !videoUrl.isEmpty()){
             Uri videoUri = Uri.parse(videoUrl);
             initializePlayer(videoUri);
@@ -130,4 +160,5 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
         super.onDestroy();
         releasePlayer();
     }
+
 }
