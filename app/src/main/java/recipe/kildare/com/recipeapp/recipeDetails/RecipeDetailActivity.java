@@ -3,9 +3,11 @@ package recipe.kildare.com.recipeapp.recipeDetails;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 import recipe.kildare.com.recipeapp.Entities.Recipe;
+import recipe.kildare.com.recipeapp.recipeDetails.interfaces.LoadIngredients;
 import recipe.kildare.com.recipeapp.recipeDetails.interfaces.LoadStepDetail;
 import recipe.kildare.com.recipeapp.R;
 import recipe.kildare.com.recipeapp.RecipeListActivity;
@@ -17,7 +19,7 @@ import recipe.kildare.com.recipeapp.utils.RecipeUtils;
  * item details are presented side-by-side with a list of items
  * in a {@link RecipeListActivity}.
  */
-public class RecipeDetailActivity extends AppCompatActivity implements LoadStepDetail {
+public class RecipeDetailActivity extends AppCompatActivity implements LoadStepDetail, LoadIngredients {
 
 
     private boolean mTwoPane;
@@ -68,6 +70,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements LoadStepD
         recipeDetailListFragment.setContext(this);
         recipeDetailListFragment.setListSteps(mRecipe.getSteps());
         recipeDetailListFragment.setLoadStepDetail(this);
+        recipeDetailListFragment.setLoadIngredients(this);
 
         getSupportFragmentManager().beginTransaction().add(R.id.fg_step_list, recipeDetailListFragment).commit();
     }
@@ -79,12 +82,13 @@ public class RecipeDetailActivity extends AppCompatActivity implements LoadStepD
     {
         if(isStep)
         {
-            RecipeDetailListFragment fragment = new RecipeDetailListFragment();
+            StepDetailFragment fragment = new StepDetailFragment();
             fragment.setContext(this);
-            fragment.setListSteps(mRecipe.getSteps());
+            fragment.setStep(mRecipe.getSteps().get(mChosenOption));
             getSupportFragmentManager().beginTransaction().replace(R.id.fg_step_detail, fragment).commit();
         }
-        else{
+        else
+            {
             IngredientDetailFragment ingredientFragment= new IngredientDetailFragment();
             ingredientFragment.setContext(this);
             ingredientFragment.setCurrentIngredient(mRecipe.getIngredients());
@@ -109,7 +113,15 @@ public class RecipeDetailActivity extends AppCompatActivity implements LoadStepD
     }
 
     @Override
-    public void loadStepDetail(int position) {
+    public void loadStepDetail(int position)
+    {
+        mChosenOption = position;
+        replaceDetailedFragment(true);
+    }
 
+    @Override
+    public void loadIngredients()
+    {
+        replaceDetailedFragment(false);
     }
 }

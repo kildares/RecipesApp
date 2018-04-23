@@ -91,5 +91,8 @@ public class RecipeDetailListFragment extends Fragment implements LoadStepDetail
         this.mContext = context;
     }
 
-
+    public void setLoadIngredients(LoadIngredients loadIngredients)
+    {
+        mLoadIngredients = loadIngredients;
+    }
 }

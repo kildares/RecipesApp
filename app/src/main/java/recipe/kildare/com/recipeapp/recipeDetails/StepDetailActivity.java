@@ -34,10 +34,7 @@ import recipe.kildare.com.recipeapp.ListView.StepAdapter;
 import recipe.kildare.com.recipeapp.recipeDetails.interfaces.LoadStepDetail;
 import recipe.kildare.com.recipeapp.R;
 
-public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.EventListener, LoadStepDetail {
-
-    @BindView(R.id.exo_step_detail)
-     SimpleExoPlayerView mExoPlayerView;
+public class StepDetailActivity extends AppCompatActivity {
 
     @BindView(R.id.tv_step_full_description)
      TextView mFullStepDescription;
@@ -63,101 +60,7 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
         mRecipe = extras.getParcelable(getString(R.string.key_recipe_data));
         mStepPosition = extras.getInt(getString(R.string.key_step_pos));
 
-        loadStepDetail(mStepPosition);
 
-        if (mStepsView != null) {
-            showRecipeList();
-        }
-    }
-
-
-    public void showRecipeList()
-    {
-        ArrayAdapter<Step> stepArrayAdapter = new StepAdapter(this, mRecipe.getSteps(), this);
-        mStepsView.setAdapter(stepArrayAdapter );
-    }
-
-    @Override
-    public void loadStepDetail(int position) {
-        String videoUrl = mRecipe.getSteps().get(mStepPosition).getVideoURL();
-
-        String description = mRecipe.getSteps().get(mStepPosition).getDescription();
-        mFullStepDescription.setText(description);
-
-        if(videoUrl != null && !videoUrl.isEmpty()){
-            Uri videoUri = Uri.parse(videoUrl);
-            initializePlayer(videoUri);
-            mExoPlayerView.setVisibility(View.VISIBLE);
-        }
-        else
-            mExoPlayerView.setVisibility(View.INVISIBLE);
-
-    }
-
-    public void initializePlayer(Uri uri)
-    {
-        if(mExoPlayer== null){
-            // Create an instance of the ExoPlayer.
-            TrackSelector trackSelector = new DefaultTrackSelector();
-            LoadControl loadControl = new DefaultLoadControl();
-            mExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
-            mExoPlayerView.setPlayer(mExoPlayer);
-            mExoPlayer.addListener(this);
-
-        }
-        // Prepare the MediaSource.
-        String userAgent = Util.getUserAgent(this, "ClassicalMusicQuiz");
-        MediaSource mediaSource = new ExtractorMediaSource(uri, new DefaultDataSourceFactory(
-                this, userAgent), new DefaultExtractorsFactory(), null, null);
-        mExoPlayer.prepare(mediaSource);
-        mExoPlayer.setPlayWhenReady(true);
-
-    }
-
-    public void releasePlayer()
-    {
-        if(mExoPlayer != null){
-            mExoPlayer.stop();
-            mExoPlayer.release();
-            mExoPlayer = null;
-        }
-
-    }
-
-    @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {
-
-    }
-
-    @Override
-    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
-    }
-
-    @Override
-    public void onLoadingChanged(boolean isLoading) {
-
-    }
-
-    @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-
-    }
-
-    @Override
-    public void onPlayerError(ExoPlaybackException error) {
-
-    }
-
-    @Override
-    public void onPositionDiscontinuity() {
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        releasePlayer();
     }
 
 }

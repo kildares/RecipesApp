@@ -36,7 +36,7 @@ public class StepAdapter extends ArrayAdapter<Step> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view;
         LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
-        view = layoutInflater.inflate(R.layout.fragment_step_detail, parent, false);
+        view = layoutInflater.inflate(R.layout.step_short, parent, false);
         TextView name = view.findViewById(R.id.tv_step_short_description);
         name.setText(mSteps.get(position).getShortDescription());
 
