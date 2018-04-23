@@ -1,4 +1,4 @@
-package recipe.kildare.com.recipeapp;
+package recipe.kildare.com.recipeapp.recipeDetails.interfaces;
 
 import recipe.kildare.com.recipeapp.Entities.Recipe;
 

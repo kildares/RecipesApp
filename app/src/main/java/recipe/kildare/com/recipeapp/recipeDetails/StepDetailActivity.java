@@ -1,4 +1,4 @@
-package recipe.kildare.com.recipeapp;
+package recipe.kildare.com.recipeapp.recipeDetails;
 
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -22,18 +22,17 @@ import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-
-import org.w3c.dom.Text;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import recipe.kildare.com.recipeapp.Entities.Recipe;
 import recipe.kildare.com.recipeapp.Entities.Step;
 import recipe.kildare.com.recipeapp.ListView.StepAdapter;
+import recipe.kildare.com.recipeapp.recipeDetails.interfaces.LoadStepDetail;
+import recipe.kildare.com.recipeapp.R;
 
 public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.EventListener, LoadStepDetail {
 
@@ -74,7 +73,7 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
 
     public void showRecipeList()
     {
-        ArrayAdapter<Step> stepArrayAdapter = new StepAdapter(this,mRecipe, this);
+        ArrayAdapter<Step> stepArrayAdapter = new StepAdapter(this, mRecipe.getSteps(), this);
         mStepsView.setAdapter(stepArrayAdapter );
     }
 

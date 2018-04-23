@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RecipeDetailActivity"
+            android:name=".recipeDetails.RecipeDetailActivity"
             android:label="@string/title_recipe_detail"
             android:parentActivityName=".RecipeListActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -30,7 +30,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="recipe.kildare.com.recipeapp.RecipeListActivity" />
         </activity>
-        <activity android:name=".StepDetailActivity"></activity>
+        <activity android:name=".recipeDetails.StepDetailActivity"></activity>
     </application>
 
 </manifest>

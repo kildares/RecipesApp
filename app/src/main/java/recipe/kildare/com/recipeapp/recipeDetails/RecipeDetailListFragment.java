@@ -1,23 +1,22 @@
-package recipe.kildare.com.recipeapp;
+package recipe.kildare.com.recipeapp.recipeDetails;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
 
-import recipe.kildare.com.recipeapp.Entities.Ingredient;
-import recipe.kildare.com.recipeapp.Entities.Recipe;
 import recipe.kildare.com.recipeapp.Entities.Step;
-import recipe.kildare.com.recipeapp.ListView.IngredientAdapter;
 import recipe.kildare.com.recipeapp.ListView.StepAdapter;
+import recipe.kildare.com.recipeapp.recipeDetails.interfaces.LoadIngredients;
+import recipe.kildare.com.recipeapp.recipeDetails.interfaces.LoadStepDetail;
+import recipe.kildare.com.recipeapp.R;
+import recipe.kildare.com.recipeapp.RecipeListActivity;
 
 /**
  * A fragment representing a single Recipe detail screen.
@@ -36,7 +35,8 @@ public class RecipeDetailListFragment extends Fragment implements LoadStepDetail
 
     private Context mContext;
     private List<Step> mStep;
-    private List<Ingredient> mIngredients;
+
+    private StepAdapter mAdapter;
 
     private ListView mList;
     /**
@@ -45,8 +45,10 @@ public class RecipeDetailListFragment extends Fragment implements LoadStepDetail
      */
     public RecipeDetailListFragment() {}
 
-    public void setCurrentStep(List<Step> steps){
-        mStep = steps;
+    public void setListSteps(List<Step> steps)
+    {
+        this.mStep = steps;
+        //mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -89,8 +91,5 @@ public class RecipeDetailListFragment extends Fragment implements LoadStepDetail
         this.mContext = context;
     }
 
-    public void setIngredients(List<Ingredient> ingredients){
-        this.mIngredients = ingredients;
-    }
 
 }

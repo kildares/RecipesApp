@@ -1,15 +1,12 @@
 package recipe.kildare.com.recipeapp;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -26,10 +23,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import recipe.kildare.com.recipeapp.Entities.Recipe;
+import recipe.kildare.com.recipeapp.recipeDetails.interfaces.LoadRecipeOnFragment;
 import recipe.kildare.com.recipeapp.Network.NetworkUtils;
 import recipe.kildare.com.recipeapp.RecyclerView.ParseRecipeData;
 import recipe.kildare.com.recipeapp.RecyclerView.RecipeAsyncTask;
 import recipe.kildare.com.recipeapp.RecyclerView.RecipeListRecyclerViewAdapter;
+import recipe.kildare.com.recipeapp.recipeDetails.RecipeDetailActivity;
 import recipe.kildare.com.recipeapp.utils.RecipeUtils;
 
 /**
@@ -43,7 +42,7 @@ import recipe.kildare.com.recipeapp.utils.RecipeUtils;
 public class RecipeListActivity extends AppCompatActivity implements    Response.ErrorListener,
                                                                         Response.Listener<String>,
                                                                         ParseRecipeData,
-                                                                        LoadRecipeOnFragment
+        LoadRecipeOnFragment
                                                                         {
 
     /**
@@ -174,12 +173,9 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
     @Override
     public void loadRecipeData(Recipe recipe)
     {
-
         Intent intent = new Intent(this, RecipeDetailActivity.class);
-        intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, recipe.getRecipe_ID());
         intent.putExtra(getString(R.string.key_recipe_data),recipe);
         startActivity(intent);
-
     }
 
 }

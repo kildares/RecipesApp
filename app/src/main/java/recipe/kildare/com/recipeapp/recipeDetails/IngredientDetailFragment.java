@@ -1,7 +1,6 @@
-package recipe.kildare.com.recipeapp;
+package recipe.kildare.com.recipeapp.recipeDetails;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,9 +12,9 @@ import android.widget.ListView;
 import java.util.List;
 
 import recipe.kildare.com.recipeapp.Entities.Ingredient;
-import recipe.kildare.com.recipeapp.Entities.Recipe;
-import recipe.kildare.com.recipeapp.Entities.Step;
 import recipe.kildare.com.recipeapp.ListView.IngredientAdapter;
+import recipe.kildare.com.recipeapp.R;
+import recipe.kildare.com.recipeapp.RecipeListActivity;
 
 /**
  * A fragment representing a single Recipe detail screen.
@@ -49,7 +48,7 @@ public class IngredientDetailFragment extends Fragment {
             mIngredient = savedInstanceState.getParcelable(getActivity().getString(R.string.key_recipe_data));
         }
 
-        View rootView = inflater.inflate(R.layout.fragment_step_detail, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_ingredient_detail, container, false);
 
         mViewIngredients = rootView.findViewById(R.id.lv_ingredients);
 

@@ -1,4 +1,4 @@
-package recipe.kildare.com.recipeapp;
+package recipe.kildare.com.recipeapp.recipeDetails;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import recipe.kildare.com.recipeapp.Entities.Recipe;
+import recipe.kildare.com.recipeapp.recipeDetails.interfaces.LoadStepDetail;
+import recipe.kildare.com.recipeapp.R;
+import recipe.kildare.com.recipeapp.RecipeListActivity;
 import recipe.kildare.com.recipeapp.utils.RecipeUtils;
 
 /**
@@ -14,7 +17,7 @@ import recipe.kildare.com.recipeapp.utils.RecipeUtils;
  * item details are presented side-by-side with a list of items
  * in a {@link RecipeListActivity}.
  */
-public class RecipeDetailActivity extends AppCompatActivity {
+public class RecipeDetailActivity extends AppCompatActivity implements LoadStepDetail {
 
 
     private boolean mTwoPane;
@@ -49,37 +52,44 @@ public class RecipeDetailActivity extends AppCompatActivity {
         }
 
         if(mTwoPane && savedInstanceState == null){
-            addRecipeDetailsFragment();
-            if(mChosenOption != 0)
-                addRecipeDetailListFragment();
-            else
-                addRecipeIngredientDetailsFragment();
+            addRecipeDetailListFragment();
+            boolean loadDetailStep = mChosenOption != 0;
+            replaceDetailedFragment(loadDetailStep);
         }
         else if(!mTwoPane && savedInstanceState == null){
-            addRecipeDetailsFragment();
+            addRecipeDetailListFragment();
         }
     }
+
 
     public void addRecipeDetailListFragment()
     {
         RecipeDetailListFragment recipeDetailListFragment = new RecipeDetailListFragment();
-        recipeDetailListFragment;
+        recipeDetailListFragment.setContext(this);
+        recipeDetailListFragment.setListSteps(mRecipe.getSteps());
+        recipeDetailListFragment.setLoadStepDetail(this);
+
+        getSupportFragmentManager().beginTransaction().add(R.id.fg_step_list, recipeDetailListFragment).commit();
     }
 
-    public void addRecipeIngredientDetailsFragment()
+    /**
+     * Adds the fragment with the detailed step list
+     */
+    public void replaceDetailedFragment(boolean isStep)
     {
-        IngredientDetailFragment ingredientFragment= new IngredientDetailFragment();
-        ingredientFragment.setContext(this);
-        ingredientFragment.setCurrentIngredient(mRecipe.getIngredients());
-        getSupportFragmentManager().beginTransaction().replace(R.id.fg_step_detail, ingredientFragment).commit();
-    }
-
-    public void addRecipeDetailsFragment()
-    {
-        RecipeDetailFragment fragment = new RecipeDetailFragment();
-        fragment.setContext(this);
-        fragment.setSteps(mRecipe.getSteps());
-        getSupportFragmentManager().beginTransaction().add(R.id.fg_recipe_detail_list, fragment).commit();
+        if(isStep)
+        {
+            RecipeDetailListFragment fragment = new RecipeDetailListFragment();
+            fragment.setContext(this);
+            fragment.setListSteps(mRecipe.getSteps());
+            getSupportFragmentManager().beginTransaction().replace(R.id.fg_step_detail, fragment).commit();
+        }
+        else{
+            IngredientDetailFragment ingredientFragment= new IngredientDetailFragment();
+            ingredientFragment.setContext(this);
+            ingredientFragment.setCurrentIngredient(mRecipe.getIngredients());
+            getSupportFragmentManager().beginTransaction().replace(R.id.fg_step_detail, ingredientFragment).commit();
+        }
     }
 
     @Override
@@ -96,5 +106,10 @@ public class RecipeDetailActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void loadStepDetail(int position) {
+
     }
 }
