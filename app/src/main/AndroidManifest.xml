@@ -32,6 +32,10 @@
         </activity>
         <activity android:name=".recipeDetails.StepDetailActivity" />
 
+        <service android:name=".RecipeUpdateService">
+
+        </service>
+
         <receiver android:name=".IngredientsWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

@@ -83,8 +83,8 @@ public class IngredientDetailFragment extends Fragment {
 
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putStringSet(getString(R.string.key_pref_ing_pos),ingredientsName);
-                editor.putInt(getString(R.string.key_pref_ing_set),0);
+                editor.putStringSet(getString(R.string.key_pref_ing_set),ingredientsName);
+                editor.putInt(getString(R.string.key_pref_ing_pos),0);
                 editor.apply();
                 Intent intent = new Intent(getContext(), RecipeUpdateService.class);
                 getContext().startService(intent);

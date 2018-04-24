@@ -19,6 +19,8 @@
     <string name="prev_step">Previous Step</string>
     <string name="receipts">Receipts</string>
 
+    <string name="wid_choose_recipe">Show in Widget</string>
+    <string name="wid_ing_default">Choose a Recipe in app</string>
     <string name="wid_txt_next">Next</string>
     <string name="wid_txt_prev">Prev</string>
     <string name="key_widget_id">KEY_WID_ID</string>
