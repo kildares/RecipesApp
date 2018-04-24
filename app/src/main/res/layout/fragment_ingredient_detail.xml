@@ -4,10 +4,11 @@
     android:orientation="vertical"
     android:layout_weight="1"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/layouts_style"
     >
 
     <TextView
-        style="@style/ingredient_step_title"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/ingredient_title"

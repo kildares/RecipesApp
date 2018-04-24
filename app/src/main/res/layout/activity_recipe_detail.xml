@@ -4,9 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".recipeDetails.RecipeDetailActivity"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    style="@style/layouts_style"
+    >
 
     <FrameLayout
+        style="@style/layouts_style"
         android:id="@+id/fg_step_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

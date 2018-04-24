@@ -48,7 +48,6 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    private Context mContext;
     private Step mStep;
 
     private SimpleExoPlayer mPlayer;
@@ -82,6 +81,7 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
             initializePlayer(uri);
         }
         else{
+
             mPlayerView.setVisibility(View.INVISIBLE);
         }
         return rootView;
@@ -92,20 +92,17 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
         if(mPlayer == null){
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
-            mPlayer = ExoPlayerFactory.newSimpleInstance(mContext, trackSelector, loadControl);
+            mPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
             mPlayerView.setPlayer(mPlayer);
             mPlayer.addListener(this);
             mPlayerView.setVisibility(View.VISIBLE);
             // Prepare the MediaSource.
-            String userAgent = Util.getUserAgent(mContext, "recipeApp");
-            MediaSource mediaSource = new ExtractorMediaSource(uri, new DefaultDataSourceFactory(mContext, userAgent), new DefaultExtractorsFactory(), null, null);
+            String userAgent = Util.getUserAgent(getContext(), "recipeApp");
+            MediaSource mediaSource = new ExtractorMediaSource(uri, new DefaultDataSourceFactory(getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
             mPlayer.prepare(mediaSource);
             mPlayer.setPlayWhenReady(true);
-        }
-    }
 
-    public void setContext(Context context){
-        this.mContext = context;
+        }
     }
 
     public void setStep(Step step)

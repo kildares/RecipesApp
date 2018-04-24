@@ -84,7 +84,6 @@ public class RecipeDetailActivity extends AppCompatActivity implements LoadStepD
         if(isStep)
         {
             StepDetailFragment fragment = new StepDetailFragment();
-            fragment.setContext(this);
             fragment.setStep(mRecipe.getSteps().get(mChosenOption));
             getSupportFragmentManager().beginTransaction().replace(R.id.fg_step_detail, fragment).commit();
         }

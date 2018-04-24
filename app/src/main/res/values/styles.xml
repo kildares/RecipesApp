@@ -20,11 +20,18 @@
     <style name="ingredient_step" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:textSize">@dimen/text_size</item>
         <item name="android:textColor">@color/text_color</item>
-        <item name="android:layout_marginLeft">@dimen/layout_margin</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
     </style>
 
-    <style name="ingredient_step_title" parent="ingredient_step">
+    <style name="layouts_style" parent="ingredient_step">
         <item name="android:textAlignment">center</item>
+        <item name="android:layout_marginBottom">@dimen/layout_margin</item>
+        <item name="android:layout_marginTop">@dimen/layout_margin</item>
+        <item name="android:layout_marginLeft">@dimen/layout_margin</item>
+        <item name="android:layout_marginRight">@dimen/layout_margin</item>
     </style>
 
 </resources>
