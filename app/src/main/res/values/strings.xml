@@ -9,10 +9,15 @@
     <string name="show_ingredient_list">Recipe Ingredients</string>
 
     <string name="key_recipe_data">KEY_RECIPE_DATA</string>
+    <string name="key_ingredient_data">KEY_INGREDIENT_DATA</string>
     <string name="key_step_data">KEY_STEP_DATA</string>
     <string name="key_step_pos">KEY_STEP_POS</string>
     <string name="ingredient_detail_measure">Msr:</string>
     <string name="ingredient_detail_quantity">Qtt:</string>
+
+    <string name="next_step">Next Step</string>
+    <string name="prev_step">Previous Step</string>
+    <string name="receipts">Receipts</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
+import recipe.kildare.com.recipeapp.Entities.Ingredient;
 import recipe.kildare.com.recipeapp.Entities.Recipe;
 import recipe.kildare.com.recipeapp.recipeDetails.interfaces.LoadIngredients;
 import recipe.kildare.com.recipeapp.recipeDetails.interfaces.LoadStepDetail;
@@ -116,12 +117,28 @@ public class RecipeDetailActivity extends AppCompatActivity implements LoadStepD
     public void loadStepDetail(int position)
     {
         mChosenOption = position;
-        replaceDetailedFragment(true);
+
+        if(mTwoPane){
+            replaceDetailedFragment(true);
+        }
+        else{
+            Intent intent = new Intent(RecipeDetailActivity.this, StepDetailActivity.class);
+            intent.putExtra(getString(R.string.key_recipe_data), mRecipe);
+            intent.putExtra(getString(R.string.key_step_pos), mChosenOption);
+            startActivity(intent);
+        }
     }
 
     @Override
     public void loadIngredients()
     {
-        replaceDetailedFragment(false);
+        if(mTwoPane)
+            replaceDetailedFragment(false);
+        else{
+            Intent intent = new Intent(RecipeDetailActivity.this, StepDetailActivity.class);
+            intent.putExtra(getString(R.string.key_recipe_data), mRecipe);
+            intent.putExtra(getString(R.string.key_step_pos), -1);
+            startActivity(intent);
+        }
     }
 }

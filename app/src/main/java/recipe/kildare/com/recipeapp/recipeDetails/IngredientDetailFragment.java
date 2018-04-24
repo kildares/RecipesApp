@@ -2,6 +2,7 @@ package recipe.kildare.com.recipeapp.recipeDetails;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import recipe.kildare.com.recipeapp.Entities.Ingredient;
@@ -45,7 +47,10 @@ public class IngredientDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         if(savedInstanceState != null){
-            mIngredient = savedInstanceState.getParcelable(getActivity().getString(R.string.key_recipe_data));
+            List<Ingredient> ingredients = savedInstanceState.getParcelableArrayList(getActivity().getString(R.string.key_recipe_data));
+
+            mIngredient = ingredients;
+            mContext = getActivity();
         }
 
         View rootView = inflater.inflate(R.layout.fragment_ingredient_detail, container, false);
@@ -62,4 +67,10 @@ public class IngredientDetailFragment extends Fragment {
         this.mContext = context;
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(getActivity().getString(R.string.key_recipe_data), (ArrayList<Ingredient>) mIngredient);
+        super.onSaveInstanceState(outState);
+    }
 }

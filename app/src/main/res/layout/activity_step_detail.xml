@@ -1,30 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    tools:context="recipe.kildare.com.recipeapp.recipeDetails.StepDetailActivity">
+     android:layout_width="match_parent"
+    android:orientation="vertical">
 
-
-    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:id="@+id/exo_step_detail"
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fg_step_detail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/tv_step_full_description"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         />
 
-    <TextView
-        android:id="@+id/tv_step_full_description"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/layout_margin"
-        android:layout_marginRight="@dimen/layout_margin"
-        style="@style/ingredient_step"
-        app:layout_constraintTop_toBottomOf="@+id/exo_step_detail"
-        />
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        >
 
+        <Button
+            android:id="@+id/bt_prev_step"
+            android:text="@string/prev_step"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/bt_next_step"
+            android:text="@string/prev_step"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
 
+    </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
+

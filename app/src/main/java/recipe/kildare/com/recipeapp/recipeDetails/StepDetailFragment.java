@@ -160,4 +160,9 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
         releasePlayer();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(getActivity().getString(R.string.key_recipe_data), mStep);
+        super.onSaveInstanceState(outState);
+    }
 }
