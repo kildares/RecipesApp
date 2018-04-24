@@ -3,15 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RecipeDetailActivity"
+    tools:context=".recipeDetails.RecipeDetailActivity"
+    android:orientation="horizontal"
     >
 
     <FrameLayout
-        android:id="@+id/fg_recipe_detail"
+        android:id="@+id/fg_step_list"
+        android:background="@color/colorPrimaryLight"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="recipe.kildare.com.recipeapp.RecipeDetailFragment"
         />
+
 
 
 </LinearLayout>

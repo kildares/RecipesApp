@@ -1,0 +1,31 @@
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    style="@style/layouts_style"
+
+    >
+
+    <TextView
+        android:id="@+id/tv_ingredient_list"
+        style="@style/ingredient_step"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:paddingBottom="@dimen/layout_margin_list"
+        android:paddingTop="@dimen/layout_margin_list"
+        android:text="@string/show_ingredient_list"
+        android:textAlignment="center" />
+
+    <ListView
+        android:id="@+id/lv_recipe_detail_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="@style/ingredient_step"
+    />
+
+</LinearLayout>
+
+
+

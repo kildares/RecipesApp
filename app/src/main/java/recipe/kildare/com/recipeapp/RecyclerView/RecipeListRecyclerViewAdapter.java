@@ -9,7 +9,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import recipe.kildare.com.recipeapp.Entities.Recipe;
-import recipe.kildare.com.recipeapp.LoadRecipeOnFragment;
+import recipe.kildare.com.recipeapp.recipeDetails.interfaces.LoadRecipeOnFragment;
 import recipe.kildare.com.recipeapp.R;
 import recipe.kildare.com.recipeapp.RecipeListActivity;
 
