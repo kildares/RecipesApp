@@ -26,4 +26,9 @@
         style="@style/ingredient_step"
         />
 
+    <Button
+        android:id="@+id/bt_wid_ingredients"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </LinearLayout>

@@ -19,7 +19,10 @@
     <string name="prev_step">Previous Step</string>
     <string name="receipts">Receipts</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="wid_txt_next">Next</string>
+    <string name="wid_txt_prev">Prev</string>
+    <string name="key_widget_id">KEY_WID_ID</string>
 
+    <string name="key_pref_ing_pos">KEY_INGREDIENT_POS</string>
+    <string name="key_pref_ing_set">KEY_INGREDIENT_SET</string>
 </resources>
