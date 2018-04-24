@@ -4,14 +4,15 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".recipeDetails.RecipeDetailActivity"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    >
 
     <FrameLayout
         android:id="@+id/fg_step_list"
         android:name="recipe.kildare.com.recipeapp.RecipeDetailFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-
+        android:background="@color/colorPrimaryLight"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/fg_step_detail"

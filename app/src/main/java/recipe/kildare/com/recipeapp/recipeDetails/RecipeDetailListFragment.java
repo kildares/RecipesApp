@@ -95,6 +95,7 @@ public class RecipeDetailListFragment extends Fragment implements LoadStepDetail
 
     @Override
     public void loadStepDetail(int position) {
+
         mLoadStepDetail.loadStepDetail(position);
     }
 

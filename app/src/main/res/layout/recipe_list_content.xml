@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
         android:textAlignment="center"
-        android:layout_marginBottom="@dimen/layout_margin"
-        android:layout_marginTop="@dimen/layout_margin"
+        android:layout_marginBottom="@dimen/layout_margin_list"
+        android:layout_marginTop="@dimen/layout_margin_list"
         android:textAppearance="?attr/textAppearanceListItem" />
 </GridLayout>

@@ -7,10 +7,10 @@
 
     <TextView
         android:id="@+id/tv_step_short_description"
+        style="@style/ingredient_step"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/layout_margin"
-        android:layout_marginRight="@dimen/layout_margin"
-        style="@style/ingredient_step"
+        android:layout_marginBottom="@dimen/layout_margin_list"
+        android:layout_marginTop="@dimen/layout_margin_list"
         />
 </LinearLayout>
