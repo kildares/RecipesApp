@@ -1,7 +1,6 @@
 package recipe.kildare.com.recipeapp.Network;
 
 import android.content.Context;
-import android.support.test.espresso.IdlingResource;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;

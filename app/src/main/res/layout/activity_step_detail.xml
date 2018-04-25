@@ -22,16 +22,25 @@
 
         <Button
             android:id="@+id/bt_prev_step"
-            android:text="@string/prev_step"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:background="@color/colorAccent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_marginLeft="@dimen/layout_margin"
+            android:layout_marginRight="@dimen/layout_margin"
+            android:layout_weight="1"
+            android:text="@string/prev_step" />
+
         <Button
             android:id="@+id/bt_next_step"
-            android:text="@string/next_step"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:background="@color/colorAccent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/layout_margin"
+            android:layout_marginRight="@dimen/layout_margin"
+            android:text="@string/next_step" />
 
     </LinearLayout>
 

@@ -12,7 +12,7 @@ public class RecipeUtils {
 
     private static final int TWO_PANE_WIDTH = 600;
 
-    public static final boolean isTwoPane(Context context)
+    public static boolean isTwoPane(Context context)
     {
         Configuration configuration = context.getResources().getConfiguration();
         int screenWitdhDp = configuration.screenWidthDp;

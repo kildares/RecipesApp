@@ -7,15 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.widget.Button;
 import android.widget.RemoteViews;
-
-import org.w3c.dom.Text;
-
 import java.util.Set;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Implementation of App Widget functionality.
@@ -60,8 +53,8 @@ public class IngredientsWidget extends AppWidgetProvider {
             intent.setAction(RecipeUpdateService.ACTION_LOAD_NEXT_INGREDIENT);
         else
             intent.setAction(RecipeUpdateService.ACTION_LOAD_PREV_INGREDIENT);
-        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        return pendingIntent;
+
+        return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
 

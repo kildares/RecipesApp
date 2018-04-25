@@ -8,7 +8,6 @@
 
     <TextView
         android:id="@+id/tv_ingredient_title"
-        android:text="title"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         app:layout_constraintTop_toBottomOf="parent"

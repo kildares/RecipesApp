@@ -1,7 +1,5 @@
 package recipe.kildare.com.recipeapp.RecyclerView;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.os.AsyncTask;
 
 import java.util.List;

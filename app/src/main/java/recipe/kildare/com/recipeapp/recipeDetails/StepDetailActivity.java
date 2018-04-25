@@ -41,7 +41,7 @@ public class StepDetailActivity extends AppCompatActivity {
             mChosenOption = extras.getInt(getString(R.string.key_step_pos));
         }
         else{
-            mRecipe = new Recipe("1","",new ArrayList<Ingredient>(),new ArrayList<Step>(), "", "");
+            mRecipe = new Recipe("1","",new ArrayList<>(),new ArrayList<>(), "", "");
         }
 
 

@@ -3,10 +3,8 @@ package recipe.kildare.com.recipeapp.recipeDetails;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 
-import recipe.kildare.com.recipeapp.Entities.Ingredient;
 import recipe.kildare.com.recipeapp.Entities.Recipe;
 import recipe.kildare.com.recipeapp.recipeDetails.interfaces.LoadIngredients;
 import recipe.kildare.com.recipeapp.recipeDetails.interfaces.LoadStepDetail;
