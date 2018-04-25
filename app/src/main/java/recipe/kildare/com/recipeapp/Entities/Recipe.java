@@ -18,7 +18,7 @@ public class Recipe implements Parcelable {
     private List<Step> Steps;
     private String Servings;
 
-    public Recipe(String recipe_ID, String title, List<Ingredient> ingredients, List<Step> steps, String servings, String imageUrl){
+    public  Recipe(String recipe_ID, String title, List<Ingredient> ingredients, List<Step> steps, String servings, String imageUrl){
         Recipe_ID = recipe_ID;
         this.Title = title;
         Ingredients = ingredients;

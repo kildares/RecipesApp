@@ -81,11 +81,12 @@ public class RecipeJSONUtils {
             try {
                 servings = jsonObject.getString(RECIPE_SERVINGS);
             }catch(JSONException e) {
-
+                Log.e(LOG_ERROR_TAG, "recipe without servings");
             }
             try {
                 image = jsonObject.getString(RECIPE_IMAGE);
             }catch(JSONException e) {
+                Log.e(LOG_ERROR_TAG, "recipe without image");
             }
 
             recipe = new Recipe(id, name, ingredients, steps, servings, image);
@@ -99,7 +100,7 @@ public class RecipeJSONUtils {
 
     public static List<Ingredient> parseRecipeIngredient(JSONArray ingredients) {
 
-        List<Ingredient> list = new ArrayList<Ingredient>();
+        List<Ingredient> list = new ArrayList<>();
         for(int i=0; i < ingredients.length() ; i++){
 
             try{
@@ -112,7 +113,7 @@ public class RecipeJSONUtils {
 
             }catch(JSONException e){
                 Log.e(LOG_ERROR_TAG,"PARSING RECIPE INGREDIENTS");
-                continue;
+
             }
         }
 
@@ -122,7 +123,7 @@ public class RecipeJSONUtils {
 
     public static List<Step> parseRecipeSteps(JSONArray steps)
     {
-        List<Step> list = new ArrayList<Step>();
+        List<Step> list = new ArrayList<>();
         for(int i=0; i < steps.length() ; i++){
 
             JSONObject jsonObject = null;

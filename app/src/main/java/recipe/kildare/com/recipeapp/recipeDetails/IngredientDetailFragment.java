@@ -1,11 +1,9 @@
 package recipe.kildare.com.recipeapp.recipeDetails;
 
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -75,7 +73,7 @@ public class IngredientDetailFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Set<String> ingredientsName = new HashSet<String>();
+                Set<String> ingredientsName = new HashSet<>();
 
                 for(Ingredient ingredient : mIngredient){
                     ingredientsName.add(ingredient.getName());

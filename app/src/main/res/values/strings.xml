@@ -5,19 +5,15 @@
     <string name="load_error">Error fetching data online</string>
 
     <string name="ingredient_title">Ingredient List</string>
-    <string name="step_title">Recipe steps</string>
     <string name="show_ingredient_list">Recipe Ingredients</string>
 
     <string name="key_recipe_data">KEY_RECIPE_DATA</string>
-    <string name="key_ingredient_data">KEY_INGREDIENT_DATA</string>
-    <string name="key_step_data">KEY_STEP_DATA</string>
     <string name="key_step_pos">KEY_STEP_POS</string>
     <string name="ingredient_detail_measure">Msr:</string>
     <string name="ingredient_detail_quantity">Qtt:</string>
 
     <string name="next_step">Next Step</string>
     <string name="prev_step">Previous Step</string>
-    <string name="receipts">Receipts</string>
 
     <string name="wid_choose_recipe">Show in Widget</string>
     <string name="wid_ing_default">Choose a Recipe in app</string>

@@ -1,14 +1,11 @@
 package recipe.kildare.com.recipeapp.recipeDetails;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -28,12 +25,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-
-import java.util.List;
-
-import recipe.kildare.com.recipeapp.Entities.Ingredient;
 import recipe.kildare.com.recipeapp.Entities.Step;
-import recipe.kildare.com.recipeapp.ListView.IngredientAdapter;
 import recipe.kildare.com.recipeapp.R;
 import recipe.kildare.com.recipeapp.RecipeListActivity;
 
