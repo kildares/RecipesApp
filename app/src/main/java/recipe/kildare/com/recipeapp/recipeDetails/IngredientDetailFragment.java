@@ -1,22 +1,30 @@
 package recipe.kildare.com.recipeapp.recipeDetails;
 
+import android.app.IntentService;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import recipe.kildare.com.recipeapp.Entities.Ingredient;
 import recipe.kildare.com.recipeapp.ListView.IngredientAdapter;
 import recipe.kildare.com.recipeapp.R;
 import recipe.kildare.com.recipeapp.RecipeListActivity;
+import recipe.kildare.com.recipeapp.RecipeUpdateService;
 
 /**
  * A fragment representing a single Recipe detail screen.
@@ -32,6 +40,7 @@ public class IngredientDetailFragment extends Fragment {
     private Context mContext;
     private List<Ingredient> mIngredient;
     private ListView mViewIngredients;
+    Button mWidgetUpdate;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -59,6 +68,28 @@ public class IngredientDetailFragment extends Fragment {
 
         ArrayAdapter<Ingredient> arrayAdapter = new IngredientAdapter(mContext,mIngredient);
         mViewIngredients.setAdapter(arrayAdapter);
+
+
+        mWidgetUpdate = rootView.findViewById(R.id.bt_wid_ingredients);
+        mWidgetUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Set<String> ingredientsName = new HashSet<String>();
+
+                for(Ingredient ingredient : mIngredient){
+                    ingredientsName.add(ingredient.getName());
+                }
+
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putStringSet(getString(R.string.key_pref_ing_set),ingredientsName);
+                editor.putInt(getString(R.string.key_pref_ing_pos),0);
+                editor.apply();
+                Intent intent = new Intent(getContext(), RecipeUpdateService.class);
+                getContext().startService(intent);
+            }
+        });
 
         return rootView;
     }
