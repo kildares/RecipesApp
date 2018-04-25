@@ -2,6 +2,7 @@ package recipe.kildare.com.recipeapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +31,7 @@ import recipe.kildare.com.recipeapp.RecyclerView.RecipeAsyncTask;
 import recipe.kildare.com.recipeapp.RecyclerView.RecipeListRecyclerViewAdapter;
 import recipe.kildare.com.recipeapp.recipeDetails.RecipeDetailActivity;
 import recipe.kildare.com.recipeapp.utils.RecipeUtils;
+import recipe.kildare.com.recipeapp.utils.SimpleIdlingResource;
 
 /**
  * An activity representing a list of Recipes. This activity
@@ -84,7 +86,7 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
     public void loadData()
     {
         if(mAdapter == null || mAdapter.getItemCount() <=0) {
-            NetworkUtils.getRecipeListFromServer(this, this,this);
+            NetworkUtils.getRecipeListFromServer(this, this,this, mIdlingResource);
             mRecyclerView.setVisibility(View.INVISIBLE);
             mLoadingBar.setVisibility(View.VISIBLE);
             mErrorMsg.setVisibility(View.INVISIBLE);
@@ -145,6 +147,9 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
     @Override
     public void onResponse(String response) {
 
+        if(mIdlingResource != null)
+            mIdlingResource.setIdleState(true);
+
         if(response!= null)
         {
             Log.d("RESPONSE",response);
@@ -165,6 +170,9 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
 
     public void showErrorMessage()
     {
+        if(mIdlingResource != null)
+            mIdlingResource.setIdleState(true);
+
         mRecyclerView.setVisibility(View.INVISIBLE);
         mErrorMsg.setVisibility(View.VISIBLE);
         mLoadingBar.setVisibility(View.INVISIBLE);
@@ -178,4 +186,12 @@ public class RecipeListActivity extends AppCompatActivity implements    Response
         startActivity(intent);
     }
 
+
+    private SimpleIdlingResource mIdlingResource;
+    public IdlingResource getIdlingResource()
+    {
+        if(mIdlingResource == null)
+            mIdlingResource = new SimpleIdlingResource();
+        return mIdlingResource;
+    }
 }

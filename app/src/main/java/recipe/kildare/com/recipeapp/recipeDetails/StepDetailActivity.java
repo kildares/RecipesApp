@@ -4,10 +4,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import recipe.kildare.com.recipeapp.Entities.Ingredient;
 import recipe.kildare.com.recipeapp.Entities.Recipe;
+import recipe.kildare.com.recipeapp.Entities.Step;
 import recipe.kildare.com.recipeapp.R;
 
 public class StepDetailActivity extends AppCompatActivity {
@@ -23,7 +27,8 @@ public class StepDetailActivity extends AppCompatActivity {
     Button mNextButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_detail);
 
@@ -31,12 +36,19 @@ public class StepDetailActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
 
-        mRecipe = extras.getParcelable(getString(R.string.key_recipe_data));
-        mChosenOption = extras.getInt(getString(R.string.key_step_pos));
+        if(extras != null){
+            mRecipe = extras.getParcelable(getString(R.string.key_recipe_data));
+            mChosenOption = extras.getInt(getString(R.string.key_step_pos));
+        }
+        else{
+            mRecipe = new Recipe("1","",new ArrayList<Ingredient>(),new ArrayList<Step>(), "", "");
+        }
+
 
         boolean isStep = (mChosenOption != -1);
 
-        replaceDetailedFragment(isStep);
+        if(mRecipe.getSteps().size() > 0)
+            replaceDetailedFragment(isStep);
     }
 
     /**
